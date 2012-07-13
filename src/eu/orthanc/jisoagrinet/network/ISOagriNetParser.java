@@ -4,18 +4,43 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ISOagriNetParser extends Thread {
 
 	private InputStream input;
 	private OutputStream output;
+	private Pattern lineDPattern;
+	private Pattern lineZPattern;
+	private Pattern lineTPattern;
+	private Pattern lineSPattern;
+	private Pattern lineRPattern;
+	private Pattern lineCPattern;
+	private Pattern lineVPattern;
+	private Pattern definistionPattern;
 
 	public ISOagriNetParser() {
 	}
 
+	// recfunction(string,pattern.first()) {
+	// suche pattern;
+	// if erfolg patternmatch++ else patternmatch--
+	// orderpattern()
+
 	public ISOagriNetParser(InputStream in, OutputStream out) {
 		this.input = in;
 		this.output = out;
+
+		definistionPattern = Pattern
+				.compile("^(D)(.)(\\d{6})(00(\\d{6})(\\d{2})(\\d))*");
+		lineDPattern = Pattern.compile("^D.*");
+		lineVPattern = Pattern.compile("^V.*");
+		lineCPattern = Pattern.compile("^C.*");
+		lineRPattern = Pattern.compile("^R.*");
+		lineSPattern = Pattern.compile("^S.*");
+		lineTPattern = Pattern.compile("^T.");
+		lineZPattern = Pattern.compile("^Z.");
 	}
 
 	@Override
@@ -24,34 +49,41 @@ public class ISOagriNetParser extends Thread {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					input));
 			String line = null;
+			Matcher m = null;
 			while ((line = reader.readLine()) != null) {
-				// header
-				if (line.startsWith("D")) {
-					processHeader(line);
-				}
-				// value
-				else if (line.startsWith("V")) {
+				m = lineVPattern.matcher(line);
+				if (m.find()) {
 					processValue(line);
+					continue;
 				}
-				// comment
-				else if (line.startsWith("C")) {
-					processComment(line);
+				m = lineDPattern.matcher(line);
+				if (m.find()) {
+					processDefinition(line);
+					continue;
 				}
-				// termination
-				else if (line.startsWith("T")) {
+				m = lineTPattern.matcher(line);
+				if (m.find()) {
 					processTermination(line);
+					continue;
 				}
-				// end
-				else if (line.startsWith("Z")) {
+				m = lineZPattern.matcher(line);
+				if (m.find()) {
 					processEnd(line);
+					continue;
 				}
-				// request
-				else if (line.startsWith("R")) {
-					processRequest(line);
+				m = lineCPattern.matcher(line);
+				if (m.find()) {
+					processComment(line);
+					continue;
 				}
-				// search
-				else if (line.startsWith("S")) {
+				m = lineSPattern.matcher(line);
+				if (m.find()) {
 					processSearch(line);
+					continue;
+				}
+				m = lineRPattern.matcher(line);
+				if (m.find()) {
+					processRequest(line);
 				}
 			}
 		} catch (Exception e) {
@@ -83,7 +115,7 @@ public class ISOagriNetParser extends Thread {
 
 	}
 
-	private void processHeader(String line) {
+	private void processDefinition(String line) {
 
 	}
 
