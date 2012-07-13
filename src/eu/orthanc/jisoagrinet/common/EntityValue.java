@@ -3,20 +3,32 @@ package eu.orthanc.jisoagrinet.common;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.orthanc.jisoagrinet.aded.IEntity;
-import eu.orthanc.jisoagrinet.aded.IItem;
-
 public class EntityValue {
-	private IEntity reference;
+	private String entity;
 	private List<ItemValue> values;
 
-	public EntityValue(IEntity reference) {
-		this.reference = reference;
+	public EntityValue() {
 		values = new ArrayList<ItemValue>();
 	}
 
-	public void addValue(IItem item, String value) {
-		values.add(new ItemValue(item, value));
+	public EntityValue(String entity) {
+		this();
+		this.setEntity(entity);
 	}
 
+	public void addValue(ItemValue value) {
+		getValues().add(value);
+	}
+
+	public String getEntity() {
+		return entity;
+	}
+
+	public void setEntity(String entity) {
+		this.entity = entity;
+	}
+
+	public List<ItemValue> getValues() {
+		return values;
+	}
 }

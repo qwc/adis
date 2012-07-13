@@ -7,6 +7,9 @@ import java.io.OutputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import eu.orthanc.jisoagrinet.common.EntityValue;
+import eu.orthanc.jisoagrinet.common.ItemValue;
+
 public class ISOagriNetParser extends Thread {
 
 	private InputStream input;
@@ -18,7 +21,10 @@ public class ISOagriNetParser extends Thread {
 	private Pattern lineRPattern;
 	private Pattern lineCPattern;
 	private Pattern lineVPattern;
-	private Pattern definistionPattern;
+	private Pattern entityPattern;
+	private Pattern itemsPattern;
+	private EntityValue currentEntity;
+	private Pattern currentItemPattern;
 
 	public ISOagriNetParser() {
 	}
@@ -32,8 +38,8 @@ public class ISOagriNetParser extends Thread {
 		this.input = in;
 		this.output = out;
 
-		definistionPattern = Pattern
-				.compile("^(D)(.)(\\d{6})(00(\\d{6})(\\d{2})(\\d))*");
+		entityPattern = Pattern.compile("^D(.)(\\d{6})");
+		itemsPattern = Pattern.compile("00(\\d{6})(\\d{2})(\\d)");
 		lineDPattern = Pattern.compile("^D.*");
 		lineVPattern = Pattern.compile("^V.*");
 		lineCPattern = Pattern.compile("^C.*");
@@ -116,7 +122,26 @@ public class ISOagriNetParser extends Thread {
 	}
 
 	private void processDefinition(String line) {
+		Matcher m = entityPattern.matcher(line);
+		if (m.find()) {
+
+			String headerType = m.group(1);
+			String entity = m.group(2);
+			EntityValue eValue = new EntityValue(entity);
+
+			m = itemsPattern.matcher(line);
+			while (m.find()) {
+
+				String item = m.group(1);
+				int size = Integer.parseInt(m.group(2));
+				int res = Integer.parseInt(m.group(3));
+				eValue.addValue(new ItemValue(item, size, res));
+			}
+			currentEntity = eValue;
+			// dictionary.validate(EntityValue);
+
+			// make pattern
+		}
 
 	}
-
 }
