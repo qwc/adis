@@ -1,6 +1,6 @@
 package eu.orthanc.jisoagrinet.common;
 
-public class ItemValue {
+public class ItemValue implements Cloneable {
 	private String item;
 	private String value;
 	private int length;
@@ -21,6 +21,10 @@ public class ItemValue {
 		this.resolution = resolution;
 		this.setItem(item);
 		this.value = null;
+	}
+
+	public ItemValue clone() {
+		return new ItemValue(item, length, resolution, value);
 	}
 
 	public String getValue() {

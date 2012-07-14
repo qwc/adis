@@ -113,7 +113,15 @@ public class ISOagriNetParser extends Thread {
 	}
 
 	private void processValue(String line) {
-
+		Matcher m = currentItemPattern.matcher(line);
+		if (m.find()) {
+			EntityValue entity = new EntityValue(currentEntity.getEntity());
+			for (int i = 1; i <= m.groupCount(); ++i) {
+				ItemValue value = entity.getValues().get(i).clone();
+				value.setValue(m.group(i));
+				entity.addValue(value);
+			}
+		}
 	}
 
 	private void processDefinition(String line) {
