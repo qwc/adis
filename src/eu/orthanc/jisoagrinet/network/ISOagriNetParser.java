@@ -29,11 +29,6 @@ public class ISOagriNetParser extends Thread {
 	public ISOagriNetParser() {
 	}
 
-	// recfunction(string,pattern.first()) {
-	// suche pattern;
-	// if erfolg patternmatch++ else patternmatch--
-	// orderpattern()
-
 	public ISOagriNetParser(InputStream in, OutputStream out) {
 		this.input = in;
 		this.output = out;
@@ -125,22 +120,25 @@ public class ISOagriNetParser extends Thread {
 		Matcher m = entityPattern.matcher(line);
 		if (m.find()) {
 
-			String headerType = m.group(1);
+			String headerType = m.group(1); // important?
 			String entity = m.group(2);
 			EntityValue eValue = new EntityValue(entity);
 
 			m = itemsPattern.matcher(line);
 			while (m.find()) {
-
-				String item = m.group(1);
-				int size = Integer.parseInt(m.group(2));
-				int res = Integer.parseInt(m.group(3));
-				eValue.addValue(new ItemValue(item, size, res));
+				eValue.addValue(new ItemValue(m.group(1), Integer.parseInt(m
+						.group(2)), Integer.parseInt(m.group(3))));
 			}
 			currentEntity = eValue;
 			// dictionary.validate(EntityValue);
 
 			// make pattern
+			String pattern = "^V." + entity;
+			for (ItemValue i : eValue.getValues()) {
+				pattern += "(.{" + i.getLength() + "})";
+			}
+			currentItemPattern = Pattern.compile(pattern);
+
 		}
 
 	}
