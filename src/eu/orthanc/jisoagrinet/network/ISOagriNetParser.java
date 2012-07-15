@@ -1,6 +1,7 @@
 package eu.orthanc.jisoagrinet.network;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -25,13 +26,30 @@ public class ISOagriNetParser extends Thread {
 	private Pattern itemsPattern;
 	private EntityValue currentEntity;
 	private Pattern currentItemPattern;
+	private ParserStates status;
+
+	public static enum ParserStates {
+		HEADER, DATA, END, FAILURE
+	};
+
+	public static enum HeaderStates {
+		DH, VALIDATE_DH, VH, VALIDATE_VH, TN, FAILURE
+	};
+
+	public static enum DataStates {
+		DN, VALIDATE_DN, VN, VALIDATE_VN, TN, FAILURE
+	};
+
+	public static enum RequestStates {
+
+	};
+
+	public static enum SearchStates {
+
+	};
 
 	public ISOagriNetParser() {
-	}
-
-	public ISOagriNetParser(InputStream in, OutputStream out) {
-		this.input = in;
-		this.output = out;
+		status = ParserStates.HEADER;
 
 		entityPattern = Pattern.compile("^D(.)(\\d{6})");
 		itemsPattern = Pattern.compile("00(\\d{6})(\\d{2})(\\d)");
@@ -44,72 +62,76 @@ public class ISOagriNetParser extends Thread {
 		lineZPattern = Pattern.compile("^Z.");
 	}
 
+	public ISOagriNetParser(InputStream in, OutputStream out) {
+		this();
+		this.input = in;
+		this.output = out;
+	}
+
 	@Override
 	public void run() {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					input));
-			String line = null;
-			Matcher m = null;
-			while ((line = reader.readLine()) != null) {
-				m = lineVPattern.matcher(line);
-				if (m.find()) {
-					processValue(line);
-					continue;
+			while (status != ParserStates.END) {
+				if (status == ParserStates.HEADER) {
+					status = processHeader(reader);
 				}
-				m = lineDPattern.matcher(line);
-				if (m.find()) {
-					processDefinition(line);
-					continue;
+				if (status == ParserStates.DATA) {
+					status = processData(reader);
 				}
-				m = lineTPattern.matcher(line);
-				if (m.find()) {
-					processTermination(line);
-					continue;
-				}
-				m = lineZPattern.matcher(line);
-				if (m.find()) {
-					processEnd(line);
-					continue;
-				}
-				m = lineCPattern.matcher(line);
-				if (m.find()) {
-					processComment(line);
-					continue;
-				}
-				m = lineSPattern.matcher(line);
-				if (m.find()) {
-					processSearch(line);
-					continue;
-				}
-				m = lineRPattern.matcher(line);
-				if (m.find()) {
-					processRequest(line);
-				}
+				// m = lineVPattern.matcher(line);
+				// if (m.find()) {
+				// processValue(line);
+				// continue;
+				// }
+				// m = lineDPattern.matcher(line);
+				// if (m.find()) {
+				// processDefinition(line);
+				// continue;
+				// }
+				// m = lineTPattern.matcher(line);
+				// if (m.find()) {
+				// processTermination(line);
+				// continue;
+				// }
+				// m = lineZPattern.matcher(line);
+				// if (m.find()) {
+				// processEnd(line);
+				// continue;
+				// }
+				// m = lineCPattern.matcher(line);
+				// if (m.find()) {
+				// processComment(line);
+				// continue;
+				// }
+				// m = lineSPattern.matcher(line);
+				// if (m.find()) {
+				// processSearch(line);
+				// continue;
+				// }
+				// m = lineRPattern.matcher(line);
+				// if (m.find()) {
+				// processRequest(line);
+				// }
 			}
 		} catch (Exception e) {
 
 		}
 	}
 
-	private void processSearch(String line) {
-
+	private ParserStates processData(BufferedReader reader) {
+		return null;
 	}
 
-	private void processRequest(String line) {
+	private ParserStates processHeader(BufferedReader reader)
+			throws IOException {
+		String line = null;
+		Matcher m = null;
+		while ((line = reader.readLine()) != null) {
 
-	}
-
-	private void processEnd(String line) {
-
-	}
-
-	private void processTermination(String line) {
-
-	}
-
-	private void processComment(String line) {
-
+		}
+		return null;
 	}
 
 	private void processValue(String line) {
@@ -127,10 +149,10 @@ public class ISOagriNetParser extends Thread {
 	private void processDefinition(String line) {
 		Matcher m = entityPattern.matcher(line);
 		if (m.find()) {
-
-			String headerType = m.group(1); // important?
-			String entity = m.group(2);
-			EntityValue eValue = new EntityValue(entity);
+			EntityValue eValue = new EntityValue(m.group(2));
+			if (m.group(1).equals("H")) {
+				eValue.setHeader(true);
+			}
 
 			m = itemsPattern.matcher(line);
 			while (m.find()) {
@@ -139,14 +161,14 @@ public class ISOagriNetParser extends Thread {
 			}
 			currentEntity = eValue;
 			// dictionary.validate(EntityValue);
+			// if validated continue else set status Failure.
 
 			// make pattern
-			String pattern = "^V." + entity;
+			String pattern = "^V." + eValue.getEntity();
 			for (ItemValue i : eValue.getValues()) {
 				pattern += "(.{" + i.getLength() + "})";
 			}
 			currentItemPattern = Pattern.compile(pattern);
-
 		}
 
 	}

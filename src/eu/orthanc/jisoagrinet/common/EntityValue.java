@@ -6,6 +6,7 @@ import java.util.List;
 public class EntityValue {
 	private String entity;
 	private List<ItemValue> values;
+	private boolean isHeader;
 
 	public EntityValue() {
 		values = new ArrayList<ItemValue>();
@@ -30,5 +31,13 @@ public class EntityValue {
 
 	public List<ItemValue> getValues() {
 		return values;
+	}
+
+	public boolean isHeader() {
+		return isHeader;
+	}
+
+	public void setHeader(boolean isHeader) {
+		this.isHeader = isHeader;
 	}
 }
