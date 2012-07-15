@@ -11,11 +11,11 @@ import eu.orthanc.jisoagrinet.storage.ADEDPersistency;
  * Database.CODE stores all information on start in the memory. (will take time...)
  */
 
-public class AgriculturalDataElementDictionary {
+public class ADED {
 
 	private ADEDPersistency persistency;
 
-	public AgriculturalDataElementDictionary(ADEDPersistency persistency) {
+	public ADED(ADEDPersistency persistency) {
 		this.persistency = persistency;
 	}
 

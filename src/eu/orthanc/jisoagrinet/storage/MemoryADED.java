@@ -7,6 +7,10 @@ import eu.orthanc.jisoagrinet.aded.Codeset;
 import eu.orthanc.jisoagrinet.aded.Entity;
 import eu.orthanc.jisoagrinet.aded.Item;
 
+/**
+ * @author qwc
+ * 
+ */
 public class MemoryADED implements ADEDPersistency, ADEDStorage {
 	private String version;
 	private Map<String, Entity> entities;
@@ -36,22 +40,22 @@ public class MemoryADED implements ADEDPersistency, ADEDStorage {
 
 	@Override
 	public void putADEDVersion(String version) {
-
+		this.version = version;
 	}
 
 	@Override
 	public void putEntity(Entity entity) {
-
+		entities.put(entity.getNumber(), entity);
 	}
 
 	@Override
 	public void putItem(Item item) {
-
+		items.put(item.getNumber(), item);
 	}
 
 	@Override
 	public void putCodeset(Codeset codeset) {
-
+		codesets.put(codeset.getNumber(), codeset);
 	}
 
 }
