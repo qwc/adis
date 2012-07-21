@@ -39,4 +39,6 @@ public interface IItem {
 
 	String getDDVersion();
 
+	boolean hasCodeset();
+
 }

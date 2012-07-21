@@ -67,4 +67,18 @@ public class ItemValue implements Cloneable {
 	public void setResolution(int resolution) {
 		this.resolution = resolution;
 	}
+
+	public Integer getValueAsInteger() {
+		if (this.resolution == 0) {
+			return Integer.parseInt(value);
+		}
+		return null;
+	}
+
+	public Double getValueAsDouble() {
+		if (this.resolution > 0) {
+			return Double.parseDouble(value);
+		}
+		return null;
+	}
 }

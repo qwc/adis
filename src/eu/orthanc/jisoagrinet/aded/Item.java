@@ -107,4 +107,9 @@ public class Item implements IItem {
 		return ddVersion;
 	}
 
+	@Override
+	public boolean hasCodeset() {
+		return codeset != null;
+	}
+
 }

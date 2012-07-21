@@ -9,6 +9,10 @@
  */
 package eu.orthanc.jisoagrinet.aded;
 
+import eu.orthanc.jisoagrinet.Configuration;
+import eu.orthanc.jisoagrinet.aded.IEntity.ItemEntry;
+import eu.orthanc.jisoagrinet.aded.IEntity.Type;
+import eu.orthanc.jisoagrinet.aded.IItem.Format;
 import eu.orthanc.jisoagrinet.common.EntityValue;
 import eu.orthanc.jisoagrinet.common.ItemValue;
 import eu.orthanc.jisoagrinet.storage.ADEDPersistency;
@@ -29,27 +33,76 @@ public class ADED {
 	}
 
 	public Entity getEntity(String entity) {
-		return null;
+		return persistency.getEntity(entity);
 	}
 
 	public Item getItem(String item) {
-		return null;
+		return persistency.getItem(item);
 	}
 
-	public String getVersion() {
-		return null;
+	public boolean validate(EntityValue value) {
+		Entity entity = getEntity(value.getEntity());
+		boolean validation = true;
+		// check items for validity
+		for (ItemValue i : value.getValues()) {
+			if (!validate(i)) {
+				validation = false;
+			}
+		}
+		// check mandatory items for entity in strict mode
+		if (Configuration.getBooleanProperty("jisoagrinet.validation.strict")) {
+			boolean found = false;
+			for (ItemEntry e : entity.getItems()) {
+				if (e.getType() == Type.MAN) {
+					found = false;
+					for (ItemValue i : value.getValues()) {
+						if (e.getItem().getNumber().equals(i.getItem())) {
+							found = true;
+							break;
+						}
+					}
+					if (!found) {
+						validation = false;
+						break;
+					}
+				}
+			}
+		}
+		return validation;
 	}
 
-	public boolean validate(EntityValue value, Entity entity) {
-		return false;
-	}
+	public boolean validate(ItemValue value) {
+		Item item = getItem(value.getItem());
+		boolean validation = true;
+		if (item.getLength() != value.getLength()
+				&& item.getResolution() != value.getResolution()) {
+			return false;
+		}
+		// check content for numeric and alphanumeric
+		if (item.getFormat() == Format.N) {
+			String numeric = value.getValue().trim();
+			if (item.getResolution() > 0) {
+				try {
+					Double.parseDouble(numeric.substring(0, numeric.length()
+							- item.getResolution())
+							+ "."
+							+ numeric.substring(
+									numeric.length() - item.getResolution(),
+									numeric.length()));
+				} catch (NumberFormatException e) {
+					return false;
+				}
+			}
+		}
+		// check content for codeset
+		if (item.hasCodeset()) {
 
-	public boolean validate(ItemValue value, Item item) {
-		return false;
+		}
+		return validation;
 	}
 
 	public Codeset getCodeset(String codeset) {
-		return null;
+		return persistency.getCodeset(codeset);
 	}
 
 }
