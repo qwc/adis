@@ -1,18 +1,16 @@
 /* 
- * @project jisoagrinet
- * @file ADEDPersistency.java
- * @date 15.07.2012
+ * Project: jisoagrinet
+ * File: ADEDPersistency.java
+ * Date: 22.07.2012
  * 
- * @author Marcel M. Otte
- * Copyright (c) 2012 - 2012, Marcel M. Otte
- * @license LGPL
+ * Copyright (c) 2012, Marcel M. Otte
+ * License: LGPL
  */
 package eu.orthanc.jisoagrinet.storage;
 
 import eu.orthanc.jisoagrinet.aded.Codeset;
 import eu.orthanc.jisoagrinet.aded.Entity;
 import eu.orthanc.jisoagrinet.aded.Item;
-
 
 public interface ADEDPersistency {
 

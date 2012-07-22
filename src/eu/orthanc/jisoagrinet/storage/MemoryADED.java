@@ -1,11 +1,10 @@
 /* 
- * @project jisoagrinet
- * @file MemoryADED.java
- * @date 15.07.2012
+ * Project: jisoagrinet
+ * File: MemoryADED.java
+ * Date: 22.07.2012
  * 
- * @author Marcel M. Otte
- * Copyright (c) 2012 - 2012, Marcel M. Otte
- * @license LGPL
+ * Copyright (c) 2012, Marcel M. Otte
+ * License: LGPL
  */
 package eu.orthanc.jisoagrinet.storage;
 
