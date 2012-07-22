@@ -47,4 +47,6 @@ public interface ICodeset {
 
 	List<Element> getElements();
 
+	String getDefinition(String key);
+
 }

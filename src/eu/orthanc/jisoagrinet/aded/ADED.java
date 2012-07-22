@@ -32,16 +32,16 @@ public class ADED {
 		this.persistency = persistency;
 	}
 
-	public Entity getEntity(String entity) {
+	public IEntity getEntity(String entity) {
 		return persistency.getEntity(entity);
 	}
 
-	public Item getItem(String item) {
+	public IItem getItem(String item) {
 		return persistency.getItem(item);
 	}
 
 	public boolean validate(EntityValue value) {
-		Entity entity = getEntity(value.getEntity());
+		IEntity entity = getEntity(value.getEntity());
 		boolean validation = true;
 		// check items for validity
 		for (ItemValue i : value.getValues()) {
@@ -72,7 +72,7 @@ public class ADED {
 	}
 
 	public boolean validate(ItemValue value) {
-		Item item = getItem(value.getItem());
+		IItem item = getItem(value.getItem());
 		boolean validation = true;
 		if (item.getLength() != value.getLength()
 				&& item.getResolution() != value.getResolution()) {
@@ -96,12 +96,14 @@ public class ADED {
 		}
 		// check content for codeset
 		if (item.hasCodeset()) {
-
+			if (item.getCodeset().getDefinition(value.getValue()) == null) {
+				validation = false;
+			}
 		}
 		return validation;
 	}
 
-	public Codeset getCodeset(String codeset) {
+	public ICodeset getCodeset(String codeset) {
 		return persistency.getCodeset(codeset);
 	}
 

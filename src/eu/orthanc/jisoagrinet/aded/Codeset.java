@@ -26,7 +26,7 @@ public class Codeset implements ICodeset {
 		elements = new ArrayList<Element>();
 	}
 
-	public void addElement(Object key, Object definition) {
+	public void addElement(String key, String definition) {
 		elements.add(new Element(key, definition));
 	}
 
@@ -48,6 +48,16 @@ public class Codeset implements ICodeset {
 	@Override
 	public List<Element> getElements() {
 		return elements;
+	}
+
+	@Override
+	public String getDefinition(String key) {
+		for (Element e : elements) {
+			if (e.getKey().equals(key)) {
+				return (String) e.getDefinition();
+			}
+		}
+		return null;
 	}
 
 }
