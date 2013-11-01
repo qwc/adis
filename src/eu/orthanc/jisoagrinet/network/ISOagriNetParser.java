@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,13 +25,6 @@ public class ISOagriNetParser extends Thread {
 
 	private InputStream input;
 	private OutputStream output;
-	private Pattern lineDPattern;
-	private Pattern lineZPattern;
-	private Pattern lineTPattern;
-	private Pattern lineSPattern;
-	private Pattern lineRPattern;
-	private Pattern lineCPattern;
-	private Pattern lineVPattern;
 	private Pattern entityPattern;
 	private Pattern itemsPattern;
 	private EntityValue currentEntity;
@@ -39,6 +33,8 @@ public class ISOagriNetParser extends Thread {
 	private HashMap<LineState, Pattern> patterns;
 	private long lineCnt;
 	private Pattern valuePattern;
+	private EntityValue definedEntity;
+	private ArrayList<EntityValue> parsedEntities;
 
 	public static enum ParserStates {
 		HEADER, DATA, END, FAILURE
@@ -62,7 +58,7 @@ public class ISOagriNetParser extends Thread {
 
 	public ISOagriNetParser() {
 		status = ParserStates.HEADER;
-
+		parsedEntities = new ArrayList<EntityValue>();
 		patterns = new HashMap<ISOagriNetParser.LineState, Pattern>();
 		patterns.put(LineState.D, Pattern.compile("^D(.)(.*)"));
 		patterns.put(LineState.V, Pattern.compile("^V(.)(.*)"));
@@ -115,19 +111,33 @@ public class ISOagriNetParser extends Thread {
 			}
 			// parse entity
 			m = entityPattern.matcher(line);
-			EntityValue ev = new EntityValue(m.group(2));
+			definedEntity = new EntityValue(m.group(2));
 			m = itemsPattern.matcher(line);
 			for (int i = 1; i < m.groupCount(); i += 4)
-				ev.addValue(new ItemValue(m.group(i + 1), Integer.parseInt(m
-						.group(i + 2)), Integer.parseInt(m.group(i + 3))));
+				definedEntity.addValue(new ItemValue(m.group(i + 1), Integer
+						.parseInt(m.group(i + 2)), Integer.parseInt(m
+						.group(i + 3))));
 			// generate pattern for value parsing
-			String pattern = "V.\\d{6}";
-			for (ItemValue iv : ev.getValues()) {
+			String pattern = "^V.\\d{6}";
+			for (ItemValue iv : definedEntity.getValues()) {
 				pattern += "(.{" + iv.getLength() + "})";
 			}
 			// TODO: debug log pattern
 			// compile and save pattern!
 			valuePattern = Pattern.compile(pattern);
+		}
+		if (lineState == LineState.V) {
+			if (valuePattern != null) {
+				Matcher m = valuePattern.matcher(line);
+				m.find();
+				EntityValue value = new EntityValue(definedEntity.getEntity());
+				for (int i = 1; i <= definedEntity.getValues().size(); ++i) {
+					ItemValue item = definedEntity.getValues().get(i - 1);
+					ItemValue iv = new ItemValue(item.getItem(),
+							item.getLength(), item.getResolution(), m.group(i));
+				}
+				this.parsedEntities.add(value);
+			}
 		}
 
 	}
