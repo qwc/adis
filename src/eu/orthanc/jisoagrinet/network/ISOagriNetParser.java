@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,18 +36,21 @@ public class ISOagriNetParser extends Thread {
 	private EntityValue currentEntity;
 	private Pattern currentItemPattern;
 	private ParserStates status;
+	private HashMap<LineState, Pattern> patterns;
+	private long lineCnt;
+	private Pattern valuePattern;
 
 	public static enum ParserStates {
 		HEADER, DATA, END, FAILURE
 	};
 
-	public static enum HeaderStates {
-		DH, VALIDATE_DH, VH, VALIDATE_VH, TN, FAILURE
+	public static enum LineState {
+		D, V, T, C, R, S, Z
 	};
 
-	public static enum DataStates {
-		DN, VALIDATE_DN, VN, VALIDATE_VN, TN, FAILURE
-	};
+	public static enum LineSubState {
+		H, N
+	}
 
 	public static enum RequestStates {
 
@@ -59,15 +63,17 @@ public class ISOagriNetParser extends Thread {
 	public ISOagriNetParser() {
 		status = ParserStates.HEADER;
 
+		patterns = new HashMap<ISOagriNetParser.LineState, Pattern>();
+		patterns.put(LineState.D, Pattern.compile("^D(.)(.*)"));
+		patterns.put(LineState.V, Pattern.compile("^V(.)(.*)"));
+		patterns.put(LineState.T, Pattern.compile("^T(.)"));
+		patterns.put(LineState.C, Pattern.compile("^C(.)(.*)"));
+		patterns.put(LineState.R, Pattern.compile("^R(.)(.*)"));
+		patterns.put(LineState.S, Pattern.compile("^S(.)(.*)"));
+		patterns.put(LineState.Z, Pattern.compile("^Z(.)"));
+
 		entityPattern = Pattern.compile("^D(.)(\\d{6})");
-		itemsPattern = Pattern.compile("00(\\d{6})(\\d{2})(\\d)");
-		lineDPattern = Pattern.compile("^D.*");
-		lineVPattern = Pattern.compile("^V.*");
-		lineCPattern = Pattern.compile("^C.*");
-		lineRPattern = Pattern.compile("^R.*");
-		lineSPattern = Pattern.compile("^S.*");
-		lineTPattern = Pattern.compile("^T.");
-		lineZPattern = Pattern.compile("^Z.");
+		itemsPattern = Pattern.compile("^D.{7}(00(\\d{6})(\\d{2})(\\d))+");
 	}
 
 	public ISOagriNetParser(InputStream in, OutputStream out) {
@@ -81,51 +87,49 @@ public class ISOagriNetParser extends Thread {
 		try {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					input));
-			while (status != ParserStates.END) {
-				if (status == ParserStates.HEADER) {
-					status = processHeader(reader);
-				}
-				if (status == ParserStates.DATA) {
-					status = processData(reader);
-				}
-				// m = lineVPattern.matcher(line);
-				// if (m.find()) {
-				// processValue(line);
-				// continue;
-				// }
-				// m = lineDPattern.matcher(line);
-				// if (m.find()) {
-				// processDefinition(line);
-				// continue;
-				// }
-				// m = lineTPattern.matcher(line);
-				// if (m.find()) {
-				// processTermination(line);
-				// continue;
-				// }
-				// m = lineZPattern.matcher(line);
-				// if (m.find()) {
-				// processEnd(line);
-				// continue;
-				// }
-				// m = lineCPattern.matcher(line);
-				// if (m.find()) {
-				// processComment(line);
-				// continue;
-				// }
-				// m = lineSPattern.matcher(line);
-				// if (m.find()) {
-				// processSearch(line);
-				// continue;
-				// }
-				// m = lineRPattern.matcher(line);
-				// if (m.find()) {
-				// processRequest(line);
-				// }
+			String line = null;
+			lineCnt = 0;
+			while ((line = reader.readLine()) != null) {
+				parseLine(line);
 			}
 		} catch (Exception e) {
 
 		}
+	}
+
+	private void parseLine(String line) {
+		LineState lineState = null;
+		LineSubState lineSubState = null;
+		for (LineState ls : patterns.keySet()) {
+			if (patterns.get(ls).matcher(line).find()) {
+				lineState = ls;
+			}
+		}
+		if (lineState == LineState.D) {
+			Matcher m = patterns.get(LineState.D).matcher(line);
+			// check sub state
+			if (m.group(1).equals("H"))
+				lineSubState = LineSubState.H;
+			else if (m.group(1).equals("N")) {
+				lineSubState = LineSubState.N;
+			}
+			// parse entity
+			m = entityPattern.matcher(line);
+			EntityValue ev = new EntityValue(m.group(2));
+			m = itemsPattern.matcher(line);
+			for (int i = 1; i < m.groupCount(); i += 4)
+				ev.addValue(new ItemValue(m.group(i + 1), Integer.parseInt(m
+						.group(i + 2)), Integer.parseInt(m.group(i + 3))));
+			// generate pattern for value parsing
+			String pattern = "V.\\d{6}";
+			for (ItemValue iv : ev.getValues()) {
+				pattern += "(.{" + iv.getLength() + "})";
+			}
+			// TODO: debug log pattern
+			// compile and save pattern!
+			valuePattern = Pattern.compile(pattern);
+		}
+
 	}
 
 	private ParserStates processData(BufferedReader reader) {
