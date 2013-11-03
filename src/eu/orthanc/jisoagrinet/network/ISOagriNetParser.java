@@ -122,21 +122,32 @@ public class ISOagriNetParser extends Thread {
 			for (ItemValue iv : definedEntity.getValues()) {
 				pattern += "(.{" + iv.getLength() + "})";
 			}
-			// TODO: debug log pattern
+			pattern += "$";
+			// TODO: debug: log pattern
+			System.out.println("debug: value pattern: " + pattern);
 			// compile and save pattern!
 			valuePattern = Pattern.compile(pattern);
 		}
 		if (lineState == LineState.V) {
 			if (valuePattern != null) {
 				Matcher m = valuePattern.matcher(line);
-				m.find();
-				EntityValue value = new EntityValue(definedEntity.getEntity());
-				for (int i = 1; i <= definedEntity.getValues().size(); ++i) {
-					ItemValue item = definedEntity.getValues().get(i - 1);
-					ItemValue iv = new ItemValue(item.getItem(),
-							item.getLength(), item.getResolution(), m.group(i));
+				if (m.find()) {
+					EntityValue value = new EntityValue(
+							definedEntity.getEntity());
+					for (int i = 1; i <= definedEntity.getValues().size(); ++i) {
+						ItemValue item = definedEntity.getValues().get(i - 1);
+						ItemValue iv = new ItemValue(item.getItem(),
+								item.getLength(), item.getResolution(),
+								m.group(i));
+					}
+					this.parsedEntities.add(value);
+				} else {
+					// TODO: log error
+					System.out.println("Value pattern did not match!");
 				}
-				this.parsedEntities.add(value);
+			} else {
+				// TODO: log error
+				System.out.println("Value line without a value pattern!");
 			}
 		}
 
