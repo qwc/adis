@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 import eu.orthanc.jisoagrinet.common.EntityValue;
 import eu.orthanc.jisoagrinet.common.ItemValue;
 
-public class ISOagriNetParser extends Thread {
+public class ADEDParser extends Thread {
 
 	private InputStream input;
 	private OutputStream output;
@@ -35,6 +35,8 @@ public class ISOagriNetParser extends Thread {
 	private EntityValue definedEntity;
 	private ArrayList<EntityValue> parsedEntities;
 	private Pattern itemsPattern2;
+	private FinishCondition condition;
+	private LineState currentLineState;
 
 	public static enum ParserStates {
 		HEADER, DATA, END, FAILURE
@@ -56,11 +58,15 @@ public class ISOagriNetParser extends Thread {
 
 	};
 
-	public ISOagriNetParser() {
+	public static interface FinishCondition {
+		boolean getCondition(LineState state);
+	}
+
+	public ADEDParser() {
 		System.out.println("constructing parser");
 		status = ParserStates.HEADER;
 		parsedEntities = new ArrayList<EntityValue>();
-		patterns = new HashMap<ISOagriNetParser.LineState, Pattern>();
+		patterns = new HashMap<ADEDParser.LineState, Pattern>();
 		patterns.put(LineState.D, Pattern.compile("^D(.)(.*)"));
 		patterns.put(LineState.V, Pattern.compile("^V(.)(.*)"));
 		patterns.put(LineState.T, Pattern.compile("^T(.)"));
@@ -72,12 +78,27 @@ public class ISOagriNetParser extends Thread {
 		entityPattern = Pattern.compile("^D(.)(\\d{6})");
 		itemsPattern = Pattern.compile("^D.\\d{6}(\\d+)$");
 		itemsPattern2 = Pattern.compile("00(\\d{6})(\\d{2})(\\d)");
+		// Default constraint running forever (server usage)
+		condition = new FinishCondition() {
+			@Override
+			public boolean getCondition(LineState state) {
+				return true;
+			}
+		};
 	}
 
-	public ISOagriNetParser(InputStream in, OutputStream out) {
+	public ADEDParser(InputStream in, OutputStream out) {
 		this();
 		this.input = in;
 		this.output = out;
+	}
+
+	public ADEDParser(InputStream in, OutputStream out,
+			FinishCondition constraint) {
+		this();
+		this.input = in;
+		this.output = out;
+		this.condition = constraint;
 	}
 
 	@Override
@@ -88,7 +109,7 @@ public class ISOagriNetParser extends Thread {
 					input));
 			String line = null;
 			lineCnt = 0;
-			while (true) {
+			while (condition.getCondition(currentLineState)) {
 				if ((line = reader.readLine()) != null) {
 					System.out.println("got line: " + line);
 					parseLine(line);
@@ -102,14 +123,14 @@ public class ISOagriNetParser extends Thread {
 	}
 
 	private void parseLine(String line) {
-		LineState lineState = null;
+		currentLineState = null;
 		LineSubState lineSubState = null;
 		for (LineState ls : patterns.keySet()) {
 			if (patterns.get(ls).matcher(line).find()) {
-				lineState = ls;
+				currentLineState = ls;
 			}
 		}
-		if (lineState == LineState.D) {
+		if (currentLineState == LineState.D) {
 			Matcher m = patterns.get(LineState.D).matcher(line);
 			m.find();
 			// check sub state
@@ -150,7 +171,7 @@ public class ISOagriNetParser extends Thread {
 			// compile and save pattern!
 			valuePattern = Pattern.compile(pattern);
 		}
-		if (lineState == LineState.V) {
+		if (currentLineState == LineState.V) {
 			if (valuePattern != null) {
 				Matcher m = valuePattern.matcher(line);
 				if (m.find()) {
@@ -177,6 +198,9 @@ public class ISOagriNetParser extends Thread {
 				System.out.println("Value line without a value pattern!");
 			}
 		}
+	}
 
+	public ArrayList<EntityValue> getParsedEntities() {
+		return parsedEntities;
 	}
 }
