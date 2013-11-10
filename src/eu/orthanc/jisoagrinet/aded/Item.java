@@ -22,6 +22,7 @@ public class Item implements IItem {
 	private String ddVersion;
 	private String comment;
 	private ICodeset codeset;
+	private String codesetHint;
 
 	public Item(String number, String identity, String name, Format format,
 			int length, int resolution) {
@@ -30,8 +31,20 @@ public class Item implements IItem {
 	}
 
 	public Item(String number, String identity, String name, Format format,
-			int length, int resolution, String unit, ICodeset codeset,
+			int length, int resolution, String unit, String codeset,
 			String minimum, String maximum, String comment, String ddVersion) {
+		String emptyRegex = "^\\?+$";
+		if (unit.matches(emptyRegex))
+			unit = null;
+		if (minimum.matches(emptyRegex))
+			minimum = null;
+		if (maximum.matches(emptyRegex))
+			maximum = null;
+		if (comment.matches(emptyRegex))
+			comment = null;
+		if (ddVersion.matches(emptyRegex))
+			ddVersion = null;
+
 		this.number = number;
 		this.identity = identity;
 		this.name = name;
@@ -39,11 +52,19 @@ public class Item implements IItem {
 		this.length = length;
 		this.resolution = resolution;
 		this.unit = unit;
-		this.codeset = codeset;
+		this.codesetHint = codeset;
 		this.minimum = minimum;
 		this.maximum = maximum;
 		this.comment = comment;
 		this.ddVersion = ddVersion;
+	}
+
+	public String getCodeSetHint() {
+		return codesetHint;
+	}
+
+	public void setCodeSet(ICodeset codeset) {
+		this.codeset = codeset;
 	}
 
 	@Override
@@ -109,6 +130,54 @@ public class Item implements IItem {
 	@Override
 	public boolean hasCodeset() {
 		return codeset != null;
+	}
+
+	public void setNumber(String number) {
+		this.number = number;
+	}
+
+	public void setIdentity(String identity) {
+		this.identity = identity;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setFormat(Format format) {
+		this.format = format;
+	}
+
+	public void setLength(int length) {
+		this.length = length;
+	}
+
+	public void setResolution(int resolution) {
+		this.resolution = resolution;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
+
+	public void setMinimum(String minimum) {
+		this.minimum = minimum;
+	}
+
+	public void setMaximum(String maximum) {
+		this.maximum = maximum;
+	}
+
+	public void setDdVersion(String ddVersion) {
+		this.ddVersion = ddVersion;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public void setCodesetHint(String codesetHint) {
+		this.codesetHint = codesetHint;
 	}
 
 }
