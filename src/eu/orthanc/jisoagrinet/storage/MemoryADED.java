@@ -15,10 +15,6 @@ import eu.orthanc.jisoagrinet.aded.Codeset;
 import eu.orthanc.jisoagrinet.aded.Entity;
 import eu.orthanc.jisoagrinet.aded.Item;
 
-/**
- * @author qwc
- * 
- */
 public class MemoryADED implements ADEDPersistency, ADEDStorage {
 	private String version;
 	private Map<String, Entity> entities;
