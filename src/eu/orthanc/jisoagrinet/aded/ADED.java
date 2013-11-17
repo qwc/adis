@@ -106,4 +106,16 @@ public class ADED {
 		return persistency.getCodeset(codeset);
 	}
 
+	public String toString() {
+		String aded = "ADED Dictionary\n";
+		aded += "  Items\n";
+		for (Item e : this.persistency.getAllItems()) {
+			aded += e.toString();
+		}
+		aded += "  Entities & Items\n";
+		for (Entity e : this.persistency.getAllEntities()) {
+			aded += e.toString();
+		}
+		return aded;
+	}
 }

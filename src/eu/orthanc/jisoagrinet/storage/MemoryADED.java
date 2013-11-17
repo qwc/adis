@@ -8,6 +8,7 @@
  */
 package eu.orthanc.jisoagrinet.storage;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,6 +61,16 @@ public class MemoryADED implements ADEDPersistency, ADEDStorage {
 	@Override
 	public void putCodeset(Codeset codeset) {
 		codesets.put(codeset.getNumber(), codeset);
+	}
+
+	@Override
+	public Collection<Item> getAllItems() {
+		return items.values();
+	}
+
+	@Override
+	public Collection<Entity> getAllEntities() {
+		return entities.values();
 	}
 
 }

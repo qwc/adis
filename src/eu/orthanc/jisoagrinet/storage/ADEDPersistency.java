@@ -8,6 +8,8 @@
  */
 package eu.orthanc.jisoagrinet.storage;
 
+import java.util.Collection;
+
 import eu.orthanc.jisoagrinet.aded.Codeset;
 import eu.orthanc.jisoagrinet.aded.Entity;
 import eu.orthanc.jisoagrinet.aded.Item;
@@ -19,5 +21,9 @@ public interface ADEDPersistency {
 	Item getItem(String item);
 
 	Codeset getCodeset(String codeset);
+
+	Collection<Item> getAllItems();
+
+	Collection<Entity> getAllEntities();
 
 }

@@ -180,4 +180,9 @@ public class Item implements IItem {
 		this.codesetHint = codesetHint;
 	}
 
+	public String toString() {
+		String item = "    Item: ";
+		return null;
+	}
+
 }
