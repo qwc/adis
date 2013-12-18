@@ -13,6 +13,10 @@ import java.util.Collection;
 import eu.orthanc.jisoagrinet.common.EntityValue;
 
 public class JISOagriNetServer {
+	
+	public interface EntityListener {
+		
+	}
 
 	public static void start() {
 

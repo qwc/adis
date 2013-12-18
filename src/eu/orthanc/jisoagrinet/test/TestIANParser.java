@@ -11,7 +11,7 @@ import java.io.OutputStreamWriter;
 
 import org.junit.Test;
 
-import eu.orthanc.jisoagrinet.network.ISOagriNetParser;
+import eu.orthanc.jisoagrinet.parser.ADEDParser;
 
 public class TestIANParser {
 
@@ -30,7 +30,7 @@ public class TestIANParser {
 		BufferedInputStream in = new BufferedInputStream(
 				new ByteArrayInputStream(out.toByteArray()));
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-		ISOagriNetParser parser = new ISOagriNetParser(in, System.out);
+		ADEDParser parser = new ADEDParser(in, System.out);
 
 		parser.run();
 

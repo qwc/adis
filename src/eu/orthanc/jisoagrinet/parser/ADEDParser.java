@@ -6,7 +6,7 @@
  * Copyright (c) 2012, Marcel M. Otte
  * License: LGPL
  */
-package eu.orthanc.jisoagrinet.network;
+package eu.orthanc.jisoagrinet.parser;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

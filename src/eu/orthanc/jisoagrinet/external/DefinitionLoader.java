@@ -23,8 +23,8 @@ import eu.orthanc.jisoagrinet.aded.Item;
 import eu.orthanc.jisoagrinet.common.ADEDRepository;
 import eu.orthanc.jisoagrinet.common.EntityValue;
 import eu.orthanc.jisoagrinet.common.ItemValue;
-import eu.orthanc.jisoagrinet.network.ADEDParser;
-import eu.orthanc.jisoagrinet.network.ADEDParser.LineState;
+import eu.orthanc.jisoagrinet.parser.ADEDParser;
+import eu.orthanc.jisoagrinet.parser.ADEDParser.LineState;
 import eu.orthanc.jisoagrinet.storage.MemoryADED;
 
 /*
