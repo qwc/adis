@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ADEDParser extends Thread {
+public class ADISParser extends Thread {
 
 	private InputStream input;
 	private OutputStream output;
@@ -59,11 +59,11 @@ public class ADEDParser extends Thread {
 		boolean getCondition(LineState state);
 	}
 
-	public ADEDParser() {
+	public ADISParser() {
 		System.out.println("constructing parser");
 		status = ParserStates.HEADER;
 		parsedEntities = new ArrayList<EntityValue>();
-		patterns = new HashMap<ADEDParser.LineState, Pattern>();
+		patterns = new HashMap<ADISParser.LineState, Pattern>();
 		patterns.put(LineState.D, Pattern.compile("^D(.)(.*)"));
 		patterns.put(LineState.V, Pattern.compile("^V(.)(.*)"));
 		patterns.put(LineState.T, Pattern.compile("^T(.)"));
@@ -84,13 +84,13 @@ public class ADEDParser extends Thread {
 		};
 	}
 
-	public ADEDParser(InputStream in, OutputStream out) {
+	public ADISParser(InputStream in, OutputStream out) {
 		this();
 		this.input = in;
 		this.output = out;
 	}
 
-	public ADEDParser(InputStream in, OutputStream out,
+	public ADISParser(InputStream in, OutputStream out,
 			FinishCondition constraint) {
 		this();
 		this.input = in;

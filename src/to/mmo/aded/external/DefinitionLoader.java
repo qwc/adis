@@ -22,10 +22,10 @@ import to.mmo.aded.Item;
 import to.mmo.aded.IItem.Format;
 import to.mmo.aded.common.ADEDRepository;
 import to.mmo.aded.storage.MemoryADED;
-import to.mmo.adis.parser.ADEDParser;
+import to.mmo.adis.parser.ADISParser;
 import to.mmo.adis.parser.EntityValue;
 import to.mmo.adis.parser.ItemValue;
-import to.mmo.adis.parser.ADEDParser.LineState;
+import to.mmo.adis.parser.ADISParser.LineState;
 
 /*
  * Definition loader for files like the ADIS/ADED files supplied by the LKV NRW and defined with the entities 190001-190016.
@@ -43,10 +43,10 @@ public class DefinitionLoader {
 	}
 
 	public void runParser() {
-		ADEDParser parser = null;
+		ADISParser parser = null;
 		try {
-			parser = new ADEDParser(new FileInputStream(file), System.out,
-					new ADEDParser.FinishCondition() {
+			parser = new ADISParser(new FileInputStream(file), System.out,
+					new ADISParser.FinishCondition() {
 						@Override
 						public boolean getCondition(LineState state) {
 							if (state == LineState.Z)

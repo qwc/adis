@@ -11,7 +11,7 @@ import java.io.OutputStreamWriter;
 
 import org.junit.Test;
 
-import to.mmo.adis.parser.ADEDParser;
+import to.mmo.adis.parser.ADISParser;
 
 public class TestIANParser {
 
@@ -30,7 +30,7 @@ public class TestIANParser {
 		BufferedInputStream in = new BufferedInputStream(
 				new ByteArrayInputStream(out.toByteArray()));
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-		ADEDParser parser = new ADEDParser(in, System.out);
+		ADISParser parser = new ADISParser(in, System.out);
 
 		parser.run();
 
