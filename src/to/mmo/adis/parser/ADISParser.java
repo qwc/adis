@@ -18,6 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ADISParser extends Thread {
+	// ADIS = Agricultural Data Interchange Syntax
 
 	private InputStream input;
 	private OutputStream output;

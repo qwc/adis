@@ -24,6 +24,7 @@ import to.mmo.adis_aded.Configuration;
  */
 
 public class ADED {
+	// ADED = Agricultural Data Element Dictionary
 
 	private ADEDPersistency persistency;
 
