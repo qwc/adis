@@ -48,4 +48,14 @@ public class EntityValue {
 	public void setHeader(boolean isHeader) {
 		this.isHeader = isHeader;
 	}
+
+	public String toString() {
+		String data = "Entity: " + entity + " (Header?" + isHeader + ")\n";
+		for (ItemValue v : values) {
+			data += "Item: " + v.getItem() + " Len: " + v.getLength()
+					+ " Res: " + v.getResolution() + " Value: " + v.getValue()
+					+ "\n";
+		}
+		return data;
+	}
 }

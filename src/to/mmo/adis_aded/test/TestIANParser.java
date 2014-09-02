@@ -12,6 +12,8 @@ import java.io.OutputStreamWriter;
 import org.junit.Test;
 
 import to.mmo.adis.parser.ADISParser;
+import to.mmo.adis.parser.EntityItemParser;
+import to.mmo.adis.parser.EntityValue;
 
 public class TestIANParser {
 
@@ -32,7 +34,11 @@ public class TestIANParser {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 		ADISParser parser = new ADISParser(in, System.out);
 
-		parser.run();
+		// parser.run();
+		EntityItemParser p = new EntityItemParser();
+		p.parseDefinition("DN190001001900010800083009108000830092080");
+		EntityValue parseNext = p.parse("VN190001AGRO201320130101????????");
+		System.out.println(parseNext.toString());
 
 	}
 

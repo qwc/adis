@@ -14,7 +14,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ADISParser extends Thread {
@@ -120,7 +119,7 @@ public class ADISParser extends Thread {
 		}
 	}
 
-	private void parseLine(String line) {
+	private Object parseLine(String line) {
 		currentLineState = null;
 		LineSubState lineSubState = null;
 		for (LineState ls : patterns.keySet()) {
@@ -128,74 +127,17 @@ public class ADISParser extends Thread {
 				currentLineState = ls;
 			}
 		}
+		EntityItemParser eiParser = null;
 		if (currentLineState == LineState.D) {
-			Matcher m = patterns.get(LineState.D).matcher(line);
-			m.find();
-			// check sub state
-			if (m.group(1).equals("H"))
-				lineSubState = LineSubState.H;
-			else if (m.group(1).equals("N")) {
-				lineSubState = LineSubState.N;
+			eiParser = new EntityItemParser();
+			if (eiParser.parseDefinition(line) == null) {
+				return null;
 			}
-			// parse entity
-			m = entityPattern.matcher(line);
-			m.find();
-			definedEntity = new EntityValue(m.group(2));
-			m = itemsPattern.matcher(line);
-			int i = 0;
-			String group1 = "";
-			if (m.find()) {
-				group1 = m.group(1);
-				System.out.println(group1);
-				m = itemsPattern2.matcher(group1);
-				while (m.find()) {
-					System.out.println(m.groupCount());
-					for (int j = 0; j <= m.groupCount(); ++j)
-						System.out.println(j + " " + m.group(j));
-					definedEntity.addValue(new ItemValue(m.group(i + 1),
-							Integer.parseInt(m.group(i + 2)), Integer
-									.parseInt(m.group(i + 3))));
-				}
-			}
-
-			// generate pattern for value parsing
-			String pattern = "^V.\\d{6}";
-			for (ItemValue iv : definedEntity.getValues()) {
-				pattern += "(.{" + iv.getLength() + "})";
-			}
-			pattern += "$";
-			// TODO: debug: log pattern
-			System.out.println("debug: value pattern: " + pattern);
-			// compile and save pattern!
-			valuePattern = Pattern.compile(pattern);
 		}
 		if (currentLineState == LineState.V) {
-			if (valuePattern != null) {
-				Matcher m = valuePattern.matcher(line);
-				if (m.find()) {
-					System.out.println(m.groupCount());
-					for (int i = 0; i <= m.groupCount(); ++i) {
-						System.out.println(i + " " + m.group(i));
-					}
-					EntityValue value = new EntityValue(
-							definedEntity.getEntity());
-					for (int i = 1; i <= definedEntity.getValues().size(); ++i) {
-						ItemValue item = definedEntity.getValues().get(i - 1);
-						ItemValue iv = new ItemValue(item.getItem(),
-								item.getLength(), item.getResolution(),
-								m.group(i));
-						value.addValue(iv);
-					}
-					this.parsedEntities.add(value);
-				} else {
-					// TODO: log error
-					System.out.println("Value pattern did not match!");
-				}
-			} else {
-				// TODO: log error
-				System.out.println("Value line without a value pattern!");
-			}
+			return eiParser.parse(line);
 		}
+		return null;
 	}
 
 	public ArrayList<EntityValue> getParsedEntities() {
