@@ -21,17 +21,10 @@ public class ADISParser extends Thread {
 
 	private InputStream input;
 	private OutputStream output;
-	private Pattern entityPattern;
-	private Pattern itemsPattern;
-	private EntityValue currentEntity;
-	private Pattern currentItemPattern;
 	private ParserStates status;
 	private HashMap<LineState, Pattern> patterns;
 	private long lineCnt;
-	private Pattern valuePattern;
-	private EntityValue definedEntity;
 	private ArrayList<EntityValue> parsedEntities;
-	private Pattern itemsPattern2;
 	private FinishCondition condition;
 	private LineState currentLineState;
 
@@ -72,9 +65,6 @@ public class ADISParser extends Thread {
 		patterns.put(LineState.S, Pattern.compile("^S(.)(.*)"));
 		patterns.put(LineState.Z, Pattern.compile("^Z(.)"));
 
-		entityPattern = Pattern.compile("^D(.)(\\d{6})");
-		itemsPattern = Pattern.compile("^D.\\d{6}(\\d+)$");
-		itemsPattern2 = Pattern.compile("00(\\d{6})(\\d{2})(\\d)");
 		// Default constraint running forever (server usage)
 		condition = new FinishCondition() {
 			@Override
@@ -120,6 +110,9 @@ public class ADISParser extends Thread {
 	}
 
 	private Object parseLine(String line) {
+		// TODO: throw parse exception with error information in adis/aded
+		// syntax also put that on the output stream.
+		// Need to think about the return objects...
 		currentLineState = null;
 		LineSubState lineSubState = null;
 		for (LineState ls : patterns.keySet()) {
