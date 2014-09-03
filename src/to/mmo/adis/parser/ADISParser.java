@@ -65,11 +65,13 @@ public class ADISParser extends Thread {
 		patterns.put(LineState.S, Pattern.compile("^S(.)(.*)"));
 		patterns.put(LineState.Z, Pattern.compile("^Z(.)"));
 
-		// Default constraint running forever (server usage)
+		// Default constraint running until a 'EOF' in adis appears
 		condition = new FinishCondition() {
 			@Override
 			public boolean getCondition(LineState state) {
-				return true;
+				if (state != LineState.Z)
+					return true;
+				return false;
 			}
 		};
 	}
