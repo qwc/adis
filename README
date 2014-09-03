@@ -2,4 +2,18 @@ This project is in the very beginning...
 
 Be patient for the inital release.
 
+Library purposes:
+- ADED Entity and Item library
+- Read/Write ADIS formatted data files
+- Receive/Send ISOagriNet formatted streams
+- Interface for other programs which need to communicate through ADIS
+
+FAQ:
+- ADIS?
+	ADIS = Agricultural Data Interchange Syntax
+- ADED?
+	ADED = Agricultural Data Element Dictionary
+- da fuq?
+	More information (in German language!) at http://ian.lkv-nrw.de/index.php?id=308
+
 License: LGPL.
