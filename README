@@ -1,8 +1,9 @@
 Work in progress... be patient for the inital release.
 
-To use this library you still need knowledge about the ADED contents. 
+To use this library you still need knowledge about the ADED contents 
+or at least about the entities which you want to communicate. 
 You still have to write converter classes from your data to a library 
-internal structure following the rules described in the ADED. 
+internal structure following the rules described for the entity in the ADED. 
 
 Library purposes:
 - ADED Entity and Item library used for verification of received data
