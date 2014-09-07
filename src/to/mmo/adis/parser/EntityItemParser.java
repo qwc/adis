@@ -3,6 +3,9 @@ package to.mmo.adis.parser;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import to.mmo.adis.EntityValue;
+import to.mmo.adis.ItemValue;
+
 public class EntityItemParser {
 
 	private Pattern pattern;

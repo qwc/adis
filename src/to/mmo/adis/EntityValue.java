@@ -6,7 +6,7 @@
  * Copyright (c) 2012, Marcel M. Otte
  * License: LGPL
  */
-package to.mmo.adis.parser;
+package to.mmo.adis;
 
 import java.util.ArrayList;
 import java.util.List;

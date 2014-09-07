@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
+import to.mmo.adis.EntityValue;
+
 public class ADISParser extends Thread {
 	// ADIS = Agricultural Data Interchange Syntax
 

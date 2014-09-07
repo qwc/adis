@@ -12,8 +12,8 @@ import to.mmo.aded.IEntity.ItemEntry;
 import to.mmo.aded.IEntity.Type;
 import to.mmo.aded.IItem.Format;
 import to.mmo.aded.storage.ADEDPersistency;
-import to.mmo.adis.parser.EntityValue;
-import to.mmo.adis.parser.ItemValue;
+import to.mmo.adis.EntityValue;
+import to.mmo.adis.ItemValue;
 import to.mmo.adis_aded.Configuration;
 
 /* Plans:

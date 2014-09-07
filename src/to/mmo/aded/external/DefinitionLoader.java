@@ -22,9 +22,9 @@ import to.mmo.aded.Item;
 import to.mmo.aded.IItem.Format;
 import to.mmo.aded.common.ADEDRepository;
 import to.mmo.aded.storage.MemoryADED;
+import to.mmo.adis.EntityValue;
+import to.mmo.adis.ItemValue;
 import to.mmo.adis.parser.ADISParser;
-import to.mmo.adis.parser.EntityValue;
-import to.mmo.adis.parser.ItemValue;
 import to.mmo.adis.parser.ADISParser.LineState;
 
 /*
