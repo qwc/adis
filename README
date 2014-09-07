@@ -1,9 +1,11 @@
-This project is in the very beginning...
+Work in progress... be patient for the inital release.
 
-Be patient for the inital release.
+To use this library you still need knowledge about the ADED contents. 
+You still have to write converter classes from your data to a library 
+internal structure following the rules described in the ADED. 
 
 Library purposes:
-- ADED Entity and Item library
+- ADED Entity and Item library used for verification of received data
 - Read/Write ADIS formatted data files
 - Receive/Send ISOagriNet formatted streams
 - Interface for other programs which need to communicate through ADIS
@@ -13,7 +15,12 @@ FAQ:
 	ADIS = Agricultural Data Interchange Syntax
 - ADED?
 	ADED = Agricultural Data Element Dictionary
-- da fuq?
+	An ADED database from the LKV Nordrhein-Westfalen:
+		https://webapp.lkv-nrw.de/AdedDataDictionary/
+- da fuq? You've got still no clue what's this all about?
+	Either you are wrong here or you just need more information to learn about it...
 	More information (in German language!) at http://ian.lkv-nrw.de/index.php?id=308
+	Resources are quite rare, I just currently do not know any resource about this subject in English, I'm sorry.
+	Only if you want to spend some money to the ISO: http://www.techstreet.com/products/101643
 
 License: LGPL.
