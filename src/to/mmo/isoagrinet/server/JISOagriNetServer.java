@@ -10,7 +10,7 @@ package to.mmo.isoagrinet.server;
 
 import java.util.Collection;
 
-import to.mmo.adis.parser.EntityValue;
+import to.mmo.adis.EntityValue;
 
 public class JISOagriNetServer {
 	

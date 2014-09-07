@@ -11,9 +11,9 @@ import java.io.OutputStreamWriter;
 
 import org.junit.Test;
 
+import to.mmo.adis.EntityValue;
 import to.mmo.adis.parser.ADISParser;
 import to.mmo.adis.parser.EntityItemParser;
-import to.mmo.adis.parser.EntityValue;
 
 public class TestIANParser {
 
