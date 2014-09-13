@@ -13,6 +13,12 @@ public class ItemValue implements Cloneable {
 	private String value;
 	private int length;
 	private int resolution;
+	private ItemRestriction restriction;
+
+	public static class ItemRestriction {
+		public String min;
+		public String max;
+	}
 
 	public ItemValue() {
 	}
@@ -79,5 +85,13 @@ public class ItemValue implements Cloneable {
 			return Double.parseDouble(value);
 		}
 		return null;
+	}
+
+	public ItemRestriction getRestriction() {
+		return restriction;
+	}
+
+	public void setRestriction(ItemRestriction restriction) {
+		this.restriction = restriction;
 	}
 }
