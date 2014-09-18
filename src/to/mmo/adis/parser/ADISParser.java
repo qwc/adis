@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
+import to.mmo.adis.ADIS;
 import to.mmo.adis.EntityValue;
 import to.mmo.adis.handler.EntityHandler;
 
@@ -26,35 +27,19 @@ public class ADISParser extends Thread {
 	private InputStream input;
 	private OutputStream output;
 	private ParserStates status;
-	private HashMap<LineState, Pattern> patterns;
+	private HashMap<ADIS.LineType, Pattern> patterns;
 	private long lineCnt;
 	private ArrayList<EntityValue> parsedEntities;
 	private FinishCondition condition;
-	private LineState currentLineState;
+	private ADIS.LineType currentLineState;
 	private ConcurrentHashMap<String, EntityHandler> entityHandlers;
 
 	public static enum ParserStates {
 		HEADER, DATA, END, FAILURE
 	};
 
-	public static enum LineState {
-		D, V, T, C, R, S, Z
-	};
-
-	public static enum LineSubState {
-		H, N
-	}
-
-	public static enum RequestStates {
-
-	};
-
-	public static enum SearchStates {
-
-	};
-
 	public static interface FinishCondition {
-		boolean getCondition(LineState state);
+		boolean getCondition(ADIS.LineType state);
 	}
 
 	public ADISParser() {
@@ -62,20 +47,20 @@ public class ADISParser extends Thread {
 		System.out.println("constructing parser");
 		status = ParserStates.HEADER;
 		parsedEntities = new ArrayList<EntityValue>();
-		patterns = new HashMap<ADISParser.LineState, Pattern>();
-		patterns.put(LineState.D, Pattern.compile("^D(.)(.*)"));
-		patterns.put(LineState.V, Pattern.compile("^V(.)(.*)"));
-		patterns.put(LineState.T, Pattern.compile("^T(.)"));
-		patterns.put(LineState.C, Pattern.compile("^C(.)(.*)"));
-		patterns.put(LineState.R, Pattern.compile("^R(.)(.*)"));
-		patterns.put(LineState.S, Pattern.compile("^S(.)(.*)"));
-		patterns.put(LineState.Z, Pattern.compile("^Z(.)"));
+		patterns = new HashMap<ADIS.LineType, Pattern>();
+		patterns.put(ADIS.LineType.D, Pattern.compile("^D(.)(.*)"));
+		patterns.put(ADIS.LineType.V, Pattern.compile("^V(.)(.*)"));
+		patterns.put(ADIS.LineType.T, Pattern.compile("^T(.)"));
+		patterns.put(ADIS.LineType.C, Pattern.compile("^C(.)(.*)"));
+		patterns.put(ADIS.LineType.R, Pattern.compile("^R(.)(.*)"));
+		patterns.put(ADIS.LineType.S, Pattern.compile("^S(.)(.*)"));
+		patterns.put(ADIS.LineType.Z, Pattern.compile("^Z(.)"));
 
 		// Default constraint running until a 'EOF' in adis appears
 		condition = new FinishCondition() {
 			@Override
-			public boolean getCondition(LineState state) {
-				if (state != LineState.Z)
+			public boolean getCondition(ADIS.LineType state) {
+				if (state != ADIS.LineType.Z)
 					return true;
 				return false;
 			}
@@ -122,27 +107,27 @@ public class ADISParser extends Thread {
 		// syntax also put that on the output stream.
 		// Need to think about the return objects...
 		currentLineState = null;
-		LineSubState lineSubState = null;
-		for (LineState ls : patterns.keySet()) {
+		for (ADIS.LineType ls : patterns.keySet()) {
 			if (patterns.get(ls).matcher(line).find()) {
 				currentLineState = ls;
 			}
 		}
 		EntityItemParser eiParser = null;
-		if (currentLineState == LineState.D) {
+		if (currentLineState == ADIS.LineType.D) {
 			eiParser = new EntityItemParser();
 			if (eiParser.parseDefinition(line) == null) {
 				throw new ADISParseException("", 0, "");
 			}
 		}
-		if (currentLineState == LineState.V) {
+		if (currentLineState == ADIS.LineType.V) {
 			EntityValue ev = eiParser.parse(line);
 			EntityHandler h;
 			if ((h = entityHandlers.get(ev.getEntity())) != null) {
 				h.handle(ev);
 			}
 		}
-		if (currentLineState == LineState.S || currentLineState == LineState.R) {
+		if (currentLineState == ADIS.LineType.S
+				|| currentLineState == ADIS.LineType.R) {
 			// TODO read all search lines (for filtering)
 			// the request lines
 			// a done requirement is needed: either a RO line or a TN line
