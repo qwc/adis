@@ -14,7 +14,7 @@ public class EntityItemParser {
 	private EntityValue entity;
 
 	public EntityItemParser() {
-		pattern = Pattern.compile("^D(.)(\\d{6})(\\d+)$");
+		pattern = Pattern.compile("^D(H|N|S|F|D)(\\d{6})(\\d+)$");
 		itemsPattern = Pattern.compile("00(\\d{6})(\\d{2})(\\d)");
 		entity = new EntityValue();
 	}
