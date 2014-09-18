@@ -15,6 +15,7 @@ public class EntityValue {
 	private String entity;
 	private List<ItemValue> values;
 	private boolean isHeader;
+	private ADIS.Status status;
 
 	public EntityValue() {
 		values = new ArrayList<ItemValue>();
@@ -57,5 +58,13 @@ public class EntityValue {
 					+ "\n";
 		}
 		return data;
+	}
+
+	public ADIS.Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(ADIS.Status status) {
+		this.status = status;
 	}
 }
