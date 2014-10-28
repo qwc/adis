@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 import to.mmo.adis.EntityValue;
 import to.mmo.adis.ItemValue;
 
-public class EntityItemParser {
+public class EntityItemParser implements IParser{
 
 	private Pattern pattern;
 	private Pattern valuePattern;

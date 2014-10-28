@@ -92,7 +92,7 @@ public class ADISParser extends Thread {
 			while (condition.getCondition(currentLineState)) {
 				if ((line = reader.readLine()) != null) {
 					System.out.println("got line: " + line);
-					parseLine(line);
+					parse(line);
 				} else {
 					Thread.sleep(10);
 				}
@@ -102,7 +102,7 @@ public class ADISParser extends Thread {
 		}
 	}
 
-	private void parseLine(String line) throws ADISParseException {
+	private void parse(String line) throws ADISParseException {
 		// TODO: throw parse exception with error information in adis/aded
 		// syntax also put that on the output stream.
 		// Need to think about the return objects...

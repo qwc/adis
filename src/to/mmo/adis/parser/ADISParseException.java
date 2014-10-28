@@ -18,5 +18,9 @@ public class ADISParseException extends Exception {
 		super(why);
 		this.why = why;
 	}
+	
+	public String toString() {
+		return "";
+	}
 
 }
