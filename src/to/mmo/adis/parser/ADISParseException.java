@@ -18,9 +18,18 @@ public class ADISParseException extends Exception {
 		super(why);
 		this.why = why;
 	}
-	
-	public String toString() {
-		return "";
-	}
 
+	public String toString() {
+		String ret = "";
+		if (failedData != null) {
+			ret = failedData + "\n";
+			for (int i = 0; i < position - 1; ++i) {
+				ret += " ";
+			}
+			ret += "^\n";
+		}
+		if (why != null)
+			ret = "Why: " + why + "\n";
+		return ret;
+	}
 }
