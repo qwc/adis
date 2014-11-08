@@ -18,10 +18,12 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 import to.mmo.adis.ADIS;
+import to.mmo.adis.CommentValue;
 import to.mmo.adis.EntityValue;
+import to.mmo.adis.RequestValue;
 import to.mmo.adis.handler.EntityHandler;
 
-public class ADISParser extends Thread {
+public class ADISStreamHandler implements Runnable {
 	// ADIS = Agricultural Data Interchange Syntax
 
 	private InputStream input;
@@ -42,7 +44,7 @@ public class ADISParser extends Thread {
 		boolean getCondition(ADIS.LineType state);
 	}
 
-	public ADISParser() {
+	public ADISStreamHandler() {
 		entityHandlers = new ConcurrentHashMap<String, EntityHandler>();
 		System.out.println("constructing parser");
 		status = ParserStates.HEADER;
@@ -67,13 +69,13 @@ public class ADISParser extends Thread {
 		};
 	}
 
-	public ADISParser(InputStream in, OutputStream out) {
+	public ADISStreamHandler(InputStream in, OutputStream out) {
 		this();
 		this.input = in;
 		this.output = out;
 	}
 
-	public ADISParser(InputStream in, OutputStream out,
+	public ADISStreamHandler(InputStream in, OutputStream out,
 			FinishCondition constraint) {
 		this();
 		this.input = in;
@@ -146,5 +148,17 @@ public class ADISParser extends Thread {
 
 	public void removeEntityHandler(EntityHandler handler) {
 		entityHandlers.remove(handler.entity());
+	}
+
+	public void compose(EntityValue entity) {
+
+	}
+
+	public void compose(RequestValue request, EntityValue[] response) {
+
+	}
+
+	public void compose(CommentValue comment) {
+
 	}
 }
