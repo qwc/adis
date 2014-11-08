@@ -8,17 +8,16 @@
  */
 package to.mmo.adis;
 
-public class ItemValue implements Cloneable {
-	public enum Format {
-		N, AN
-	};
+import to.mmo.aded.IItem;
+import to.mmo.aded.IItem.Format;
 
+public class ItemValue implements Cloneable {
 	private String item;
 	private String value;
 	private int length;
 	private int resolution;
 	private ItemRestriction restriction;
-	private Format format;
+	private IItem.Format format;
 
 	public static class ItemRestriction {
 		public String min;

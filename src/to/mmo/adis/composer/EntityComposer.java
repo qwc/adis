@@ -1,8 +1,8 @@
 package to.mmo.adis.composer;
 
+import to.mmo.aded.IItem.Format;
 import to.mmo.adis.EntityValue;
 import to.mmo.adis.ItemValue;
-import to.mmo.adis.ItemValue.Format;
 import to.mmo.adis.parser.ADISParseException;
 
 public class EntityComposer {
@@ -46,8 +46,7 @@ public class EntityComposer {
 		return expandTo(input, length, null);
 	}
 
-	private static String expandTo(String input, int length,
-			ItemValue.Format format) {
+	private static String expandTo(String input, int length, Format format) {
 		String ret = "";
 		if (format == null) {
 			for (int i = input.length(); i < length; ++i) {
