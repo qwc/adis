@@ -6,10 +6,11 @@ You still have to write converter classes from your data to a library
 internal structure following the rules described for the entity in the ADED. 
 
 Library purposes:
-- ADED Entity and Item library used for verification of received data
 - Read/Write ADIS formatted data files
 - Receive/Send ISOagriNet formatted streams
 - Interface for other programs which need to communicate through ADIS
+This purpose will be moved to a new project in the future: 
+- ADED Entity and Item library used for verification of received data
 
 Supported lines:
 D - Definition
