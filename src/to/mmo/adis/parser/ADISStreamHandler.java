@@ -195,7 +195,7 @@ public class ADISStreamHandler implements Runnable {
 		entityHandlers.remove(handler.entity());
 	}
 
-	public void compose(EntityValue entity) {
+	public void compose(EntityValue[] entity) {
 
 	}
 

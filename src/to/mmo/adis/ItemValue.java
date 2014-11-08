@@ -9,11 +9,16 @@
 package to.mmo.adis;
 
 public class ItemValue implements Cloneable {
+	public enum Format {
+		N, AN
+	};
+
 	private String item;
 	private String value;
 	private int length;
 	private int resolution;
 	private ItemRestriction restriction;
+	private Format format;
 
 	public static class ItemRestriction {
 		public String min;
@@ -93,5 +98,13 @@ public class ItemValue implements Cloneable {
 
 	public void setRestriction(ItemRestriction restriction) {
 		this.restriction = restriction;
+	}
+
+	public Format getFormat() {
+		return format;
+	}
+
+	public void setFormat(Format format) {
+		this.format = format;
 	}
 }
