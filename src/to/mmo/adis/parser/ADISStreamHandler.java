@@ -42,6 +42,7 @@ public class ADISStreamHandler implements Runnable {
 	private ConcurrentHashMap<String, SearchValue> openSearches;
 	private ADIS.LineType lastLineState;
 	private ArrayList<RequestHandler> requestHandlers;
+	private EntityItemParser eiParser;
 
 	public static enum ParserStates {
 		HEADER, DATA, END, FAILURE
@@ -125,29 +126,34 @@ public class ADISStreamHandler implements Runnable {
 		}
 		if (lastLineState == LineType.S && currentLineState != LineType.R) {
 			RequestValue rVal = new RequestValue();
-			SearchValue l;
 			for (SearchValue s : openSearches.values()) {
 				rVal.addSearchValue(s);
-				l = s;
 			}
 			rVal.setError(true);
 			this.compose(rVal, null);
 			throw new ADISParseException(line, 0,
 					"Search lines need to have a follow up request line.");
 		}
-		EntityItemParser eiParser = null;
 		if (currentLineState == ADIS.LineType.D) {
 			eiParser = new EntityItemParser();
 			if (eiParser.parseDefinition(line) == null) {
-				throw new ADISParseException("", 0, "");
+				throw new ADISParseException(line, 0, "");
 			}
+			lastLineState = LineType.D;
 		}
-		if (currentLineState == ADIS.LineType.V) {
+		if (currentLineState == ADIS.LineType.V && eiParser != null) {
 			EntityValue ev = eiParser.parse(line);
 			EntityHandler h;
 			if ((h = entityHandlers.get(ev.getEntity())) != null) {
 				h.handle(ev);
 			}
+		} else {
+			this.compose(line, true);
+			CommentValue cf = new CommentValue("Non existent definition line",
+					true);
+			this.compose(cf);
+			throw new ADISParseException(line, 0,
+					"Parse error. No existent definition line.");
 		}
 		if (currentLineState == ADIS.LineType.S
 				|| currentLineState == ADIS.LineType.R) {
@@ -198,6 +204,10 @@ public class ADISStreamHandler implements Runnable {
 	}
 
 	public void compose(CommentValue comment) {
+
+	}
+
+	public void compose(String line, boolean error) {
 
 	}
 }
