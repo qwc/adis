@@ -25,7 +25,7 @@ import to.mmo.aded.storage.MemoryADED;
 import to.mmo.adis.ADIS;
 import to.mmo.adis.EntityValue;
 import to.mmo.adis.ItemValue;
-import to.mmo.adis.parser.ADISParser;
+import to.mmo.adis.parser.ADISStreamHandler;
 
 /*
  * Definition loader for files like the ADIS/ADED files supplied by the LKV NRW and defined with the entities 190001-190016.
@@ -43,10 +43,10 @@ public class DefinitionLoader {
 	}
 
 	public void runParser() {
-		ADISParser parser = null;
+		ADISStreamHandler parser = null;
 		try {
-			parser = new ADISParser(new FileInputStream(file), System.out,
-					new ADISParser.FinishCondition() {
+			parser = new ADISStreamHandler(new FileInputStream(file), System.out,
+					new ADISStreamHandler.FinishCondition() {
 						@Override
 						public boolean getCondition(ADIS.LineType state) {
 							if (state == ADIS.LineType.Z)

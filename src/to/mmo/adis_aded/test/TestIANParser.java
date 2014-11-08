@@ -12,7 +12,7 @@ import java.io.OutputStreamWriter;
 import org.junit.Test;
 
 import to.mmo.adis.EntityValue;
-import to.mmo.adis.parser.ADISParser;
+import to.mmo.adis.parser.ADISStreamHandler;
 import to.mmo.adis.parser.EntityItemParser;
 
 public class TestIANParser {
@@ -32,7 +32,7 @@ public class TestIANParser {
 		BufferedInputStream in = new BufferedInputStream(
 				new ByteArrayInputStream(out.toByteArray()));
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-		ADISParser parser = new ADISParser(in, System.out);
+		ADISStreamHandler parser = new ADISStreamHandler(in, System.out);
 
 		// parser.run();
 		EntityItemParser p = new EntityItemParser();
