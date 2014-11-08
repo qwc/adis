@@ -8,6 +8,7 @@ public class RequestValue {
 	private ArrayList<SearchValue> searchFilters;
 	private EntityValue entity;
 	private int maxEntries;
+	private boolean error;
 
 	public RequestValue() {
 		this.searchFilters = new ArrayList<SearchValue>();
@@ -41,5 +42,13 @@ public class RequestValue {
 
 	public List<SearchValue> getSearchValues() {
 		return searchFilters;
+	}
+
+	public boolean isError() {
+		return error;
+	}
+
+	public void setError(boolean error) {
+		this.error = error;
 	}
 }

@@ -18,23 +18,30 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 import to.mmo.adis.ADIS;
+import to.mmo.adis.ADIS.LineType;
 import to.mmo.adis.CommentValue;
 import to.mmo.adis.EntityValue;
 import to.mmo.adis.RequestValue;
+import to.mmo.adis.SearchValue;
 import to.mmo.adis.handler.EntityHandler;
+import to.mmo.adis.handler.RequestHandler;
 
 public class ADISStreamHandler implements Runnable {
 	// ADIS = Agricultural Data Interchange Syntax
 
 	private InputStream input;
 	private OutputStream output;
-	private ParserStates status;
 	private HashMap<ADIS.LineType, Pattern> patterns;
 	private long lineCnt;
 	private ArrayList<EntityValue> parsedEntities;
 	private FinishCondition condition;
 	private ADIS.LineType currentLineState;
 	private ConcurrentHashMap<String, EntityHandler> entityHandlers;
+	private SearchParser searchParser;
+	private RequestParser requestParser;
+	private ConcurrentHashMap<String, SearchValue> openSearches;
+	private ADIS.LineType lastLineState;
+	private ArrayList<RequestHandler> requestHandlers;
 
 	public static enum ParserStates {
 		HEADER, DATA, END, FAILURE
@@ -47,7 +54,6 @@ public class ADISStreamHandler implements Runnable {
 	public ADISStreamHandler() {
 		entityHandlers = new ConcurrentHashMap<String, EntityHandler>();
 		System.out.println("constructing parser");
-		status = ParserStates.HEADER;
 		parsedEntities = new ArrayList<EntityValue>();
 		patterns = new HashMap<ADIS.LineType, Pattern>();
 		patterns.put(ADIS.LineType.D, Pattern.compile("^D(.)(.*)"));
@@ -67,6 +73,9 @@ public class ADISStreamHandler implements Runnable {
 				return false;
 			}
 		};
+		searchParser = new SearchParser();
+		requestParser = new RequestParser();
+		requestHandlers = new ArrayList<RequestHandler>();
 	}
 
 	public ADISStreamHandler(InputStream in, OutputStream out) {
@@ -114,6 +123,18 @@ public class ADISStreamHandler implements Runnable {
 				currentLineState = ls;
 			}
 		}
+		if (lastLineState == LineType.S && currentLineState != LineType.R) {
+			RequestValue rVal = new RequestValue();
+			SearchValue l;
+			for (SearchValue s : openSearches.values()) {
+				rVal.addSearchValue(s);
+				l = s;
+			}
+			rVal.setError(true);
+			this.compose(rVal, null);
+			throw new ADISParseException(line, 0,
+					"Search lines need to have a follow up request line.");
+		}
 		EntityItemParser eiParser = null;
 		if (currentLineState == ADIS.LineType.D) {
 			eiParser = new EntityItemParser();
@@ -130,16 +151,34 @@ public class ADISStreamHandler implements Runnable {
 		}
 		if (currentLineState == ADIS.LineType.S
 				|| currentLineState == ADIS.LineType.R) {
-			// TODO read all search lines (for filtering)
-			// the request lines
-			// a done requirement is needed: either a RO line or a TN line
-			// and now give that resulting object thingy to a request handler...
-			// o.O
+			if (currentLineState == ADIS.LineType.S) {
+				SearchValue sVal = searchParser.parse(line);
+				openSearches.put(sVal.getEntity().getEntity(), sVal);
+				lastLineState = LineType.S;
+			}
+			if (currentLineState == ADIS.LineType.R) {
+				RequestValue rVal = requestParser.parse(line);
+				for (SearchValue s : openSearches.values()) {
+					rVal.addSearchValue(s);
+				}
+				for (RequestHandler r : requestHandlers) {
+					r.handle(rVal);
+				}
+			}
 		}
+
 	}
 
 	public ArrayList<EntityValue> getParsedEntities() {
 		return parsedEntities;
+	}
+
+	public void addRequestHandler(RequestHandler handler) {
+		requestHandlers.add(handler);
+	}
+
+	public void removeRequestHandler(RequestHandler handler) {
+		requestHandlers.remove(handler);
 	}
 
 	public void addEntityHandler(EntityHandler handler) {
