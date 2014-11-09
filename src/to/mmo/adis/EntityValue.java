@@ -11,14 +11,29 @@ package to.mmo.adis;
 import java.util.ArrayList;
 import java.util.List;
 
+import to.mmo.adis.ItemValue.ItemError;
+
 public class EntityValue {
 	private String entity;
 	private List<ItemValue> values;
 	private boolean isHeader;
 	private ADIS.Status status;
+	private DefinitionError error;
+	private ItemError itemError;
+
+	public static class DefinitionError {
+		public boolean isError;
+		public int position;
+
+		public DefinitionError() {
+			isError = false;
+			position = -1;
+		}
+	}
 
 	public EntityValue() {
 		values = new ArrayList<ItemValue>();
+		error = new DefinitionError();
 	}
 
 	public EntityValue(String entity) {
@@ -66,5 +81,23 @@ public class EntityValue {
 
 	public void setStatus(ADIS.Status status) {
 		this.status = status;
+	}
+
+	public void setError(boolean isError, int position) {
+		this.error.isError = isError;
+		this.error.position = position;
+	}
+
+	public DefinitionError getError() {
+		return error;
+	}
+
+	public void setItemError(boolean isError, int position) {
+		this.itemError.isError = isError;
+		this.itemError.position = position;
+	}
+
+	public ItemError getItemError() {
+		return itemError;
 	}
 }

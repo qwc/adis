@@ -22,21 +22,51 @@ public class EntityComposer {
 		EntityValue entity = values[0];
 		// compose definition line
 		StringBuilder b = new StringBuilder();
-		b.append("DN").append(entity.getEntity());
+		b.append("D");
+		if (entity.getError().isError) {
+			b.append("F");
+		} else {
+			b.append("N");
+		}
+		b.append(entity.getEntity());
 		for (ItemValue v : entity.getValues()) {
 			b.append(expandTo(v.getItem(), 8));
 			b.append(expandTo("" + v.getLength(), 2));
 			b.append(v.getResolution());
 		}
 		b.append("\r\n");
+		if (entity.getError().isError) {
+			b.append("CF");
+			for (int i = 0; i < entity.getError().position; ++i) {
+				for (int j = 0; j < 11; ++j)
+					b.append(" ");
+			}
+			b.append("^\r\n");
+		}
 		for (EntityValue e : values) {
-			b.append("VN");
+			b.append("V");
+			if (e.getItemError().isError) {
+				b.append("F");
+			} else {
+				b.append("N");
+			}
 			b.append(e.getEntity());
 			for (ItemValue v : e.getValues()) {
 				b.append(expandTo(v.getValue(), v.getResolution(),
 						v.getFormat()));
 			}
 			b.append("\r\n");
+			if (e.getItemError().isError) {
+				b.append("CF");
+				for (ItemValue v : e.getValues()) {
+					if (!v.getError().isError)
+						for (int i = 0; i < v.getLength(); ++i)
+							b.append(" ");
+					else
+						break;
+				}
+				b.append("^\r\n");
+			}
 		}
 
 		return b.toString();

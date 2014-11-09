@@ -17,7 +17,18 @@ public class ItemValue implements Cloneable {
 	private int length;
 	private int resolution;
 	private ItemRestriction restriction;
+	private ItemError error;
 	private IItem.Format format;
+
+	public static class ItemError {
+		public int position;
+		public boolean isError;
+
+		public ItemError() {
+			this.isError = false;
+			this.position = -1;
+		}
+	}
 
 	public static class ItemRestriction {
 		public String min;
@@ -25,9 +36,11 @@ public class ItemValue implements Cloneable {
 	}
 
 	public ItemValue() {
+		error = new ItemError();
 	}
 
 	public ItemValue(String item, int length, int resolution, String value) {
+		this();
 		this.setLength(length);
 		this.resolution = resolution;
 		this.setItem(item);
@@ -35,6 +48,7 @@ public class ItemValue implements Cloneable {
 	}
 
 	public ItemValue(String item, int length, int resolution) {
+		this();
 		this.setLength(length);
 		this.resolution = resolution;
 		this.setItem(item);
@@ -108,5 +122,14 @@ public class ItemValue implements Cloneable {
 
 	public void setFormat(Format format) {
 		this.format = format;
+	}
+
+	public void setError(boolean isError, int position) {
+		this.error.isError = isError;
+		this.error.position = position;
+	}
+
+	public ItemError getError() {
+		return error;
 	}
 }
