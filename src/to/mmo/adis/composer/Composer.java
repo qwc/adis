@@ -11,15 +11,60 @@ import to.mmo.adis.SearchValue;
 public class Composer {
 
 	public static String compose(RequestValue value, boolean response) {
+		StringBuilder b = new StringBuilder();
 		if (response && value.isError()) {
 			// TODO: all searchvalues or just the faulty? minimal: RF line with
 			// the faulty request
-			return "";
+			for (SearchValue s : value.getSearchValues()) {
+				if (s.isError()) {
+					b.append(Composer.compose(s));
+					if (s.getEntity().getError().isError) {
+						b.append("CF");
+						for (int i = 0; i < s.getEntity().getError().position; ++i) {
+							for (int j = 0; j < 11; ++j)
+								b.append(" ");
+						}
+						b.append("^\r\n");
+					} else {
+						b.append("  ^\r\n");
+					}
+				}
+			}
+			b.append("RF");
+			b.append(expandTo(value.getEntity().getEntity(), 6));
+			for (ItemValue v : value.getEntity().getValues()) {
+				b.append(expandTo(v.getItem(), 8));
+				b.append(expandTo("" + v.getLength(), 2));
+				b.append(v.getResolution());
+			}
+			b.append("\r\n");
+			if (value.getEntity().getError().isError) {
+				b.append("CF");
+				for (int i = 0; i < value.getEntity().getError().position; ++i) {
+					for (int j = 0; j < 11; ++j)
+						b.append(" ");
+				}
+				b.append("^\r\n");
+			} else {
+				b.append("  ^\r\n");
+			}
+			b.append("\r\n");
 		} else {
 			// tinker a real request together
-
+			for (SearchValue s : value.getSearchValues()) {
+				b.append(Composer.compose(s));
+			}
+			// now for the Request
+			b.append("RN");
+			b.append(expandTo(value.getEntity().getEntity(), 6));
+			for (ItemValue v : value.getEntity().getValues()) {
+				b.append(expandTo(v.getItem(), 8));
+				b.append(expandTo("" + v.getLength(), 2));
+				b.append(v.getResolution());
+			}
+			b.append("\r\n");
 		}
-		return null;
+		return b.toString();
 	}
 
 	private static String compose(SearchValue val) {

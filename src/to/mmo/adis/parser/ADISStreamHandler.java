@@ -191,9 +191,16 @@ public class ADISStreamHandler implements Runnable {
 		writer.write(Composer.compose(entity));
 	}
 
+	public void compose(RequestValue request) throws ADISComposeException,
+			IOException {
+		this.compose(request, null);
+	}
+
 	public void compose(RequestValue request, EntityValue[] response)
-			throws IOException {
+			throws IOException, ADISComposeException {
 		writer.write(Composer.compose(request, response != null));
+		if (response != null)
+			writer.write(Composer.compose(response));
 	}
 
 	public void compose(CommentValue comment) throws IOException {
@@ -201,6 +208,6 @@ public class ADISStreamHandler implements Runnable {
 	}
 
 	public void compose(String line, boolean error) {
-
+		// hmm?
 	}
 }
