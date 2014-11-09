@@ -37,7 +37,6 @@ public class ADISStreamHandler implements Runnable {
 	private InputStream input;
 	private OutputStream output;
 	private HashMap<ADIS.LineType, Pattern> patterns;
-	private ArrayList<EntityValue> parsedEntities;
 	private FinishCondition condition;
 	private ADIS.LineType currentLineState;
 	private ConcurrentHashMap<String, EntityHandler> entityHandlers;
@@ -47,6 +46,8 @@ public class ADISStreamHandler implements Runnable {
 	private ADIS.LineType lastLineState;
 	private ArrayList<RequestHandler> requestHandlers;
 	private EntityItemParser eiParser;
+	private OutputStreamWriter writer;
+	private BufferedReader reader;
 
 	public static interface FinishCondition {
 		boolean getCondition(ADIS.LineType state);
@@ -55,15 +56,14 @@ public class ADISStreamHandler implements Runnable {
 	public ADISStreamHandler() {
 		entityHandlers = new ConcurrentHashMap<String, EntityHandler>();
 		System.out.println("constructing parser");
-		parsedEntities = new ArrayList<EntityValue>();
 		patterns = new HashMap<ADIS.LineType, Pattern>();
-		patterns.put(ADIS.LineType.D, Pattern.compile("^D(.)(.*)"));
-		patterns.put(ADIS.LineType.V, Pattern.compile("^V(.)(.*)"));
-		patterns.put(ADIS.LineType.T, Pattern.compile("^T(.)"));
-		patterns.put(ADIS.LineType.C, Pattern.compile("^C(.)(.*)"));
-		patterns.put(ADIS.LineType.R, Pattern.compile("^R(.)(.*)"));
-		patterns.put(ADIS.LineType.S, Pattern.compile("^S(.)(.*)"));
-		patterns.put(ADIS.LineType.Z, Pattern.compile("^Z(.)"));
+		patterns.put(ADIS.LineType.D, Pattern.compile("^D(.)(.*)$"));
+		patterns.put(ADIS.LineType.V, Pattern.compile("^V(.)(.*)$"));
+		patterns.put(ADIS.LineType.T, Pattern.compile("^T(.)$"));
+		patterns.put(ADIS.LineType.C, Pattern.compile("^C(.)(.*)$"));
+		patterns.put(ADIS.LineType.R, Pattern.compile("^R(.)(.*)$"));
+		patterns.put(ADIS.LineType.S, Pattern.compile("^S(.)(.*)$"));
+		patterns.put(ADIS.LineType.Z, Pattern.compile("^Z(.)$"));
 
 		// Default constraint running until a 'EOF' in adis appears
 		condition = new FinishCondition() {
@@ -83,13 +83,13 @@ public class ADISStreamHandler implements Runnable {
 		this();
 		this.input = in;
 		this.output = out;
+		reader = new BufferedReader(new InputStreamReader(input));
+		writer = new OutputStreamWriter(output);
 	}
 
 	public ADISStreamHandler(InputStream in, OutputStream out,
 			FinishCondition constraint) {
-		this();
-		this.input = in;
-		this.output = out;
+		this(in, out);
 		this.condition = constraint;
 	}
 
@@ -97,8 +97,6 @@ public class ADISStreamHandler implements Runnable {
 	public void run() {
 		System.out.println("running parser");
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					input));
 			String line = null;
 			while (condition.getCondition(currentLineState)) {
 				if ((line = reader.readLine()) != null) {
@@ -175,10 +173,6 @@ public class ADISStreamHandler implements Runnable {
 
 	}
 
-	public ArrayList<EntityValue> getParsedEntities() {
-		return parsedEntities;
-	}
-
 	public void addRequestHandler(RequestHandler handler) {
 		requestHandlers.add(handler);
 	}
@@ -197,19 +191,16 @@ public class ADISStreamHandler implements Runnable {
 
 	public void compose(EntityValue[] entity) throws ADISComposeException,
 			IOException {
-		OutputStreamWriter writer = new OutputStreamWriter(output);
 		writer.write(Composer.compose(entity));
-		// writer.flush(); // needed?
 	}
 
 	public void compose(RequestValue request, EntityValue[] response)
 			throws IOException {
-		OutputStreamWriter writer = new OutputStreamWriter(output);
 		writer.write(Composer.compose(request, response != null));
 	}
 
-	public void compose(CommentValue comment) {
-		Composer.compose(comment);
+	public void compose(CommentValue comment) throws IOException {
+		writer.write(Composer.compose(comment));
 	}
 
 	public void compose(String line, boolean error) {

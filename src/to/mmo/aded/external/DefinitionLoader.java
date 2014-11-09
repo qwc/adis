@@ -45,8 +45,8 @@ public class DefinitionLoader {
 	public void runParser() {
 		ADISStreamHandler parser = null;
 		try {
-			parser = new ADISStreamHandler(new FileInputStream(file), System.out,
-					new ADISStreamHandler.FinishCondition() {
+			parser = new ADISStreamHandler(new FileInputStream(file),
+					System.out, new ADISStreamHandler.FinishCondition() {
 						@Override
 						public boolean getCondition(ADIS.LineType state) {
 							if (state == ADIS.LineType.Z)
@@ -58,7 +58,7 @@ public class DefinitionLoader {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		parsedEntities = parser.getParsedEntities();
+		// parsedEntities = parser.getParsedEntities();
 	}
 
 	public ADEDRepository buildRepository() {
