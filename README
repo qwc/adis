@@ -28,11 +28,11 @@ I - Include
 O - Output
 
 Supported line states:
-H - Header
 N - Normal
 F - Failure
 
 Unsupported states:
+H - Header
 S - Sync
 D - Delete
 
