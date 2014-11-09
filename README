@@ -37,9 +37,9 @@ S - Sync
 D - Delete
 
 FAQ:
-- ADIS?
+- ADIS ?
 	ADIS = Agricultural Data Interchange Syntax
-- ADED?
+- ADED ?
 	ADED = Agricultural Data Element Dictionary
 	An ADED database from the LKV Nordrhein-Westfalen:
 		https://webapp.lkv-nrw.de/AdedDataDictionary/
