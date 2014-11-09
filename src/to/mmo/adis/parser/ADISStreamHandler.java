@@ -19,10 +19,13 @@ import java.util.regex.Pattern;
 
 import to.mmo.adis.ADIS;
 import to.mmo.adis.ADIS.LineType;
+import to.mmo.adis.ADISException;
 import to.mmo.adis.CommentValue;
 import to.mmo.adis.EntityValue;
 import to.mmo.adis.RequestValue;
 import to.mmo.adis.SearchValue;
+import to.mmo.adis.composer.ADISComposeException;
+import to.mmo.adis.composer.EntityComposer;
 import to.mmo.adis.handler.EntityHandler;
 import to.mmo.adis.handler.RequestHandler;
 
@@ -114,7 +117,7 @@ public class ADISStreamHandler implements Runnable {
 		}
 	}
 
-	private void parse(String line) throws ADISParseException {
+	private void parse(String line) throws ADISException {
 		// TODO: throw parse exception with error information in adis/aded
 		// syntax also put that on the output stream.
 		// Need to think about the return objects...
@@ -149,7 +152,7 @@ public class ADISStreamHandler implements Runnable {
 			}
 		} else {
 			this.compose(line, true);
-			CommentValue cf = new CommentValue("Non existent definition line",
+			CommentValue cf = new CommentValue("Non existent definition line.",
 					true);
 			this.compose(cf);
 			throw new ADISParseException(line, 0,
@@ -195,7 +198,8 @@ public class ADISStreamHandler implements Runnable {
 		entityHandlers.remove(handler.entity());
 	}
 
-	public void compose(EntityValue[] entity) {
+	public void compose(EntityValue[] entity) throws ADISComposeException {
+		EntityComposer.compose(entity);
 
 	}
 

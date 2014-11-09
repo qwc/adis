@@ -3,19 +3,18 @@ package to.mmo.adis.composer;
 import to.mmo.aded.IItem.Format;
 import to.mmo.adis.EntityValue;
 import to.mmo.adis.ItemValue;
-import to.mmo.adis.parser.ADISParseException;
 
 public class EntityComposer {
 
 	public static String compose(EntityValue[] values)
-			throws ADISParseException {
+			throws ADISComposeException {
 		String entitystr = null;
 		// check if all values are of the same entity
 		for (EntityValue e : values) {
 			if (entitystr == null)
 				entitystr = e.getEntity();
 			if (entitystr.compareTo(e.getEntity()) != 0) {
-				throw new ADISParseException(null, 0,
+				throw new ADISComposeException(
 						"More than one entity type within entity composer, aborting.");
 			}
 		}

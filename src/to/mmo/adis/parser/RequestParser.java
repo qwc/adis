@@ -3,6 +3,7 @@ package to.mmo.adis.parser;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import to.mmo.adis.ADISException;
 import to.mmo.adis.EntityValue;
 import to.mmo.adis.ItemValue;
 import to.mmo.adis.RequestValue;
@@ -19,7 +20,7 @@ public class RequestParser implements IParser {
 	}
 
 	@Override
-	public RequestValue parse(String line) throws ADISParseException {
+	public RequestValue parse(String line) throws ADISException {
 		RequestValue request = new RequestValue();
 		EntityValue entity = new EntityValue();
 		Matcher matcher = pattern.matcher(line);

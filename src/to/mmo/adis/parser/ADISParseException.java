@@ -1,9 +1,10 @@
 package to.mmo.adis.parser;
 
-@SuppressWarnings("serial")
-public class ADISParseException extends Exception {
+import to.mmo.adis.ADISException;
 
-	private String why;
+@SuppressWarnings("serial")
+public class ADISParseException extends ADISException {
+
 	private String failedData;
 	private int position;
 
@@ -11,12 +12,10 @@ public class ADISParseException extends Exception {
 		super(why);
 		this.failedData = failedData;
 		this.position = position;
-		this.why = why;
 	}
 
 	public ADISParseException(String why) {
 		super(why);
-		this.why = why;
 	}
 
 	public String toString() {
@@ -28,8 +27,8 @@ public class ADISParseException extends Exception {
 			}
 			ret += "^\n";
 		}
-		if (why != null)
-			ret = "Why: " + why + "\n";
+		if (this.getMessage() != null)
+			ret = "Why: " + this.getMessage() + "\n";
 		return ret;
 	}
 }
