@@ -8,7 +8,13 @@ import to.mmo.adis.RequestValue;
 public class Composer {
 
 	public static String compose(RequestValue value, boolean response) {
-
+		if (response && value.isError()) {
+			// TODO: all searchvalues or just the faulty? minimal: RF line with
+			// the faulty request
+			return "";
+		} else {
+			// tinker a real request together
+		}
 		return null;
 	}
 
