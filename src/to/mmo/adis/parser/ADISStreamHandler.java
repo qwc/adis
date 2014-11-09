@@ -112,9 +112,6 @@ public class ADISStreamHandler implements Runnable {
 	}
 
 	private void parse(String line) throws ADISException, IOException {
-		// TODO: throw parse exception with error information in adis/aded
-		// syntax also put that on the output stream.
-		// Need to think about the return objects...
 		currentLineState = null;
 		for (ADIS.LineType ls : patterns.keySet()) {
 			if (patterns.get(ls).matcher(line).find()) {
