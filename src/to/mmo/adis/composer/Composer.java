@@ -4,7 +4,9 @@ import to.mmo.aded.IItem.Format;
 import to.mmo.adis.CommentValue;
 import to.mmo.adis.EntityValue;
 import to.mmo.adis.ItemValue;
+import to.mmo.adis.ItemValue.ItemRestriction;
 import to.mmo.adis.RequestValue;
+import to.mmo.adis.SearchValue;
 
 public class Composer {
 
@@ -15,8 +17,42 @@ public class Composer {
 			return "";
 		} else {
 			// tinker a real request together
+
 		}
 		return null;
+	}
+
+	private static String compose(SearchValue val) {
+		StringBuilder b = new StringBuilder();
+		b.append("S");
+		if (val.isError()) {
+			b.append("F");
+		} else {
+			b.append("N");
+		}
+		for (ItemValue v : val.getEntity().getValues()) {
+			b.append(expandTo(v.getItem(), 8));
+			b.append(expandTo("" + v.getLength(), 2));
+			b.append(v.getResolution());
+			ItemRestriction restriction = v.getRestriction();
+			if (restriction.max == null) {
+				for (int i = 0; i < v.getLength(); ++i) {
+					b.append("?");
+				}
+			} else {
+				b.append(expandTo(restriction.max, v.getLength(), v.getFormat()));
+			}
+			if (restriction.min == null) {
+				for (int i = 0; i < v.getLength(); ++i) {
+					b.append("?");
+				}
+			} else {
+				b.append(expandTo(restriction.min, v.getLength(), v.getFormat()));
+			}
+		}
+		b.append(expandTo(val.getMaxEntries() + "", 6, Format.N));
+		b.append("\r\n");
+		return b.toString();
 	}
 
 	public static String compose(EntityValue[] values)

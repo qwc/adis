@@ -4,6 +4,7 @@ public class SearchValue {
 
 	private EntityValue entity;
 	private int maxEntries;
+	private boolean error;
 
 	public SearchValue() {
 
@@ -29,6 +30,14 @@ public class SearchValue {
 
 	public void setMaxEntries(int maxEntries) {
 		this.maxEntries = maxEntries;
+	}
+
+	public boolean isError() {
+		return error;
+	}
+
+	public void setError(boolean error) {
+		this.error = error;
 	}
 
 }
