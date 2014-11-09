@@ -31,7 +31,7 @@ public class ItemValue implements Cloneable {
 		this.setLength(length);
 		this.resolution = resolution;
 		this.setItem(item);
-		this.value = value;
+		this.setValue(value);
 	}
 
 	public ItemValue(String item, int length, int resolution) {
@@ -50,7 +50,10 @@ public class ItemValue implements Cloneable {
 	}
 
 	public void setValue(String value) {
-		this.value = value;
+		if (!value.matches("\\?+"))
+			this.value = value;
+		else
+			this.value = null;
 	}
 
 	public String getItem() {
