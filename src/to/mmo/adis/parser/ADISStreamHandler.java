@@ -9,9 +9,11 @@
 package to.mmo.adis.parser;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -111,7 +113,7 @@ public class ADISStreamHandler implements Runnable {
 		}
 	}
 
-	private void parse(String line) throws ADISException {
+	private void parse(String line) throws ADISException, IOException {
 		// TODO: throw parse exception with error information in adis/aded
 		// syntax also put that on the output stream.
 		// Need to think about the return objects...
@@ -193,17 +195,21 @@ public class ADISStreamHandler implements Runnable {
 		entityHandlers.remove(handler.entity());
 	}
 
-	public void compose(EntityValue[] entity) throws ADISComposeException {
-		Composer.compose(entity);
-
+	public void compose(EntityValue[] entity) throws ADISComposeException,
+			IOException {
+		OutputStreamWriter writer = new OutputStreamWriter(output);
+		writer.write(Composer.compose(entity));
+		// writer.flush(); // needed?
 	}
 
-	public void compose(RequestValue request, EntityValue[] response) {
-
+	public void compose(RequestValue request, EntityValue[] response)
+			throws IOException {
+		OutputStreamWriter writer = new OutputStreamWriter(output);
+		writer.write(Composer.compose(request, response != null));
 	}
 
 	public void compose(CommentValue comment) {
-
+		Composer.compose(comment);
 	}
 
 	public void compose(String line, boolean error) {

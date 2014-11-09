@@ -1,6 +1,7 @@
 package to.mmo.adis.composer;
 
 import to.mmo.aded.IItem.Format;
+import to.mmo.adis.CommentValue;
 import to.mmo.adis.EntityValue;
 import to.mmo.adis.ItemValue;
 import to.mmo.adis.RequestValue;
@@ -113,5 +114,17 @@ public class Composer {
 			}
 		}
 		return ret;
+	}
+
+	public static String compose(CommentValue comment) {
+		StringBuilder b = new StringBuilder();
+		b.append("C");
+		if (comment.isError()) {
+			b.append("F");
+		} else {
+			b.append("N");
+		}
+		b.append(comment.getComment()).append("\r\n");
+		return b.toString();
 	}
 }
