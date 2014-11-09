@@ -32,7 +32,7 @@ import to.mmo.adis.handler.EntityHandler;
 import to.mmo.adis.handler.RequestHandler;
 
 public class ADISStreamHandler implements Runnable {
-	// ADIS = Agricultural Data Interchange Syntax
+	// ADIS = Agricultural Data Interchange Syntax + Stream Handler
 
 	private InputStream input;
 	private OutputStream output;
