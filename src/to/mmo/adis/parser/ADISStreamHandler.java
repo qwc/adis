@@ -125,7 +125,8 @@ public class ADISStreamHandler implements Runnable {
 				currentLineState = ls;
 			}
 		}
-		if (lastLineState == LineType.S && currentLineState != LineType.R) {
+		if (lastLineState == LineType.S && currentLineState != LineType.R
+				&& currentLineState != LineType.S) {
 			RequestValue rVal = new RequestValue();
 			for (SearchValue s : openSearches.values()) {
 				rVal.addSearchValue(s);
