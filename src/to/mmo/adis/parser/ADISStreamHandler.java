@@ -35,7 +35,6 @@ public class ADISStreamHandler implements Runnable {
 	private InputStream input;
 	private OutputStream output;
 	private HashMap<ADIS.LineType, Pattern> patterns;
-	private long lineCnt;
 	private ArrayList<EntityValue> parsedEntities;
 	private FinishCondition condition;
 	private ADIS.LineType currentLineState;
@@ -103,7 +102,6 @@ public class ADISStreamHandler implements Runnable {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					input));
 			String line = null;
-			lineCnt = 0;
 			while (condition.getCondition(currentLineState)) {
 				if ((line = reader.readLine()) != null) {
 					System.out.println("got line: " + line);
