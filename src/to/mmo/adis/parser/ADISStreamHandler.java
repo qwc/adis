@@ -46,10 +46,6 @@ public class ADISStreamHandler implements Runnable {
 	private ArrayList<RequestHandler> requestHandlers;
 	private EntityItemParser eiParser;
 
-	public static enum ParserStates {
-		HEADER, DATA, END, FAILURE
-	};
-
 	public static interface FinishCondition {
 		boolean getCondition(ADIS.LineType state);
 	}
