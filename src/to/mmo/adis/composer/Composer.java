@@ -3,8 +3,14 @@ package to.mmo.adis.composer;
 import to.mmo.aded.IItem.Format;
 import to.mmo.adis.EntityValue;
 import to.mmo.adis.ItemValue;
+import to.mmo.adis.RequestValue;
 
-public class EntityComposer {
+public class Composer {
+
+	public static String compose(RequestValue value, boolean response) {
+
+		return null;
+	}
 
 	public static String compose(EntityValue[] values)
 			throws ADISComposeException {
@@ -16,6 +22,13 @@ public class EntityComposer {
 			if (entitystr.compareTo(e.getEntity()) != 0) {
 				throw new ADISComposeException(
 						"More than one entity type within entity composer, aborting.");
+			}
+			for (ItemValue i : e.getValues()) {
+				if (i.getFormat() == null) {
+					throw new ADISComposeException(
+							"A item Format is not set! Item: " + i.getItem()
+									+ "");
+				}
 			}
 		}
 		EntityValue entity = values[0];
@@ -42,6 +55,7 @@ public class EntityComposer {
 			}
 			b.append("^\r\n");
 		}
+		// compose value lines
 		for (EntityValue e : values) {
 			b.append("V");
 			if (e.getItemError().isError) {

@@ -25,7 +25,7 @@ import to.mmo.adis.EntityValue;
 import to.mmo.adis.RequestValue;
 import to.mmo.adis.SearchValue;
 import to.mmo.adis.composer.ADISComposeException;
-import to.mmo.adis.composer.EntityComposer;
+import to.mmo.adis.composer.Composer;
 import to.mmo.adis.handler.EntityHandler;
 import to.mmo.adis.handler.RequestHandler;
 
@@ -197,7 +197,7 @@ public class ADISStreamHandler implements Runnable {
 	}
 
 	public void compose(EntityValue[] entity) throws ADISComposeException {
-		EntityComposer.compose(entity);
+		Composer.compose(entity);
 
 	}
 
