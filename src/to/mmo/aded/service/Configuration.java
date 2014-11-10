@@ -6,7 +6,7 @@
  * Copyright (c) 2012, Marcel M. Otte
  * License: LGPL
  */
-package to.mmo.adis_aded;
+package to.mmo.aded.service;
 
 import java.io.File;
 import java.io.FileInputStream;

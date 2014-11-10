@@ -1,4 +1,4 @@
-package to.mmo.adis_aded.test;
+package to.mmo.aded.test;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
