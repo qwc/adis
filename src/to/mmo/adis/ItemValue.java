@@ -8,8 +8,8 @@
  */
 package to.mmo.adis;
 
-import to.mmo.aded.IItem;
-import to.mmo.aded.IItem.Format;
+import to.mmo.adis.structure.IItem;
+import to.mmo.adis.structure.IItem.Format;
 
 public class ItemValue implements Cloneable {
 	private String item;

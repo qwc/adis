@@ -1,12 +1,12 @@
 package to.mmo.adis.composer;
 
-import to.mmo.aded.IItem.Format;
 import to.mmo.adis.CommentValue;
 import to.mmo.adis.EntityValue;
 import to.mmo.adis.ItemValue;
 import to.mmo.adis.ItemValue.ItemRestriction;
 import to.mmo.adis.RequestValue;
 import to.mmo.adis.SearchValue;
+import to.mmo.adis.structure.IItem.Format;
 
 public class Composer {
 
