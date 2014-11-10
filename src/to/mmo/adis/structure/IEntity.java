@@ -33,11 +33,11 @@ public interface IEntity {
 			this.type = type;
 		}
 
-		Type getType() {
+		public Type getType() {
 			return type;
 		}
 
-		IItem getItem() {
+		public IItem getItem() {
 			return item;
 		}
 	}
