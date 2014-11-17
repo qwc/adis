@@ -63,6 +63,10 @@ public class ItemValue implements Cloneable {
 		return value;
 	}
 
+	public String getTrimmedValue() {
+		return value.trim();
+	}
+
 	public void setValue(String value) {
 		if (!value.matches("\\?+"))
 			this.value = value;
