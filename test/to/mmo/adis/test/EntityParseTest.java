@@ -17,7 +17,6 @@ import to.mmo.adis.parser.ADISStreamHandler;
 public class EntityParseTest {
 
 	private BufferedInputStream in;
-	private EntityValue ev;
 	private ArrayList<EntityValue> values;
 
 	@Before
