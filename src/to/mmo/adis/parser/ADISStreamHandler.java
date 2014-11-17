@@ -84,7 +84,8 @@ public class ADISStreamHandler implements Runnable {
 		this.input = in;
 		this.output = out;
 		reader = new BufferedReader(new InputStreamReader(input));
-		writer = new OutputStreamWriter(output);
+		if (out != null)
+			writer = new OutputStreamWriter(output);
 	}
 
 	public ADISStreamHandler(InputStream in, OutputStream out,
@@ -142,7 +143,7 @@ public class ADISStreamHandler implements Runnable {
 			if ((h = entityHandlers.get(ev.getEntity())) != null) {
 				h.handle(ev);
 			}
-		} else {
+		} else if (currentLineState == ADIS.LineType.V && eiParser == null) {
 			this.compose(line, true);
 			CommentValue cf = new CommentValue("Non existent definition line.",
 					true);
@@ -188,7 +189,8 @@ public class ADISStreamHandler implements Runnable {
 
 	public void compose(EntityValue[] entity) throws ADISComposeException,
 			IOException {
-		writer.write(Composer.compose(entity));
+		if (writer != null)
+			writer.write(Composer.compose(entity));
 	}
 
 	public void compose(RequestValue request) throws ADISComposeException,
@@ -198,13 +200,15 @@ public class ADISStreamHandler implements Runnable {
 
 	public void compose(RequestValue request, EntityValue[] response)
 			throws IOException, ADISComposeException {
-		writer.write(Composer.compose(request, response != null));
+		if (writer != null)
+			writer.write(Composer.compose(request, response != null));
 		if (response != null)
 			writer.write(Composer.compose(response));
 	}
 
 	public void compose(CommentValue comment) throws IOException {
-		writer.write(Composer.compose(comment));
+		if (writer != null)
+			writer.write(Composer.compose(comment));
 	}
 
 	public void compose(String line, boolean error) {
