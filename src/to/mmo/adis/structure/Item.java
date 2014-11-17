@@ -182,7 +182,7 @@ public class Item implements IItem {
 
 	public String toString() {
 		String item = "    Item: ";
-		return null;
+		return item;
 	}
 
 }
