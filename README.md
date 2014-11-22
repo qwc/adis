@@ -25,28 +25,28 @@ Library purposes:
 - Interface for other programs which need to communicate through ADIS
 
 Supported line types:
-D - Definition
-V - Values
-C - Comments
-S - Search
-R - Request
-T - Termination
-Z - EOF
+- D - Definition
+- V - Values
+- C - Comments
+- S - Search
+- R - Request
+- T - Termination
+- Z - EOF
 
 Currently unsupported:
-E - End
-F - File
-I - Include
-O - Output
+- E - End
+- F - File
+- I - Include
+- O - Output
 
 Supported line states:
-N - Normal
-F - Failure
+- N - Normal
+- F - Failure
 
 Unsupported states:
-H - Header
-S - Sync
-D - Delete
+- H - Header
+- S - Sync
+- D - Delete
 
 FAQ:
 ===
