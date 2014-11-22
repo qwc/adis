@@ -1,4 +1,13 @@
-Work in progress... be patient for the inital release.
+Upcoming release 0.2:
+- Full functionality on Request lines
+- Tests for Requests
+
+Release 0.1:
+Usable for Entity handling. 
+- Register your handler
+- Do something with it.
+
+---
 
 To use this library you still need knowledge about the ADED contents 
 or at least about the entities which you want to communicate. 
@@ -9,8 +18,6 @@ Library purposes:
 - Read/Write ADIS formatted data files
 - Receive/Send ISOagriNet formatted streams
 - Interface for other programs which need to communicate through ADIS
-This purpose will be moved to a new project in the future: 
-- ADED Entity and Item library used for verification of received data
 
 Supported line types:
 D - Definition
