@@ -48,6 +48,18 @@ Unsupported states:
 - S - Sync
 - D - Delete
 
+Internal description
+----
+
+Lines are parsed using static and on-demand (value lines) regular expressions, 
+with the hope for being fast even with big junks ADIS data.
+
+The ADIS syntax structure is built within classes with some abstraction. 
+ADIS structure and data are separated as far as possible and still linked too close.
+
+Requests with needed composing of lines and ADED (see aded project) are the main construction areas currently.  
+
+
 FAQ:
 ===
 - ADIS ?
