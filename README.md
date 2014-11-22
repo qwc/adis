@@ -59,9 +59,9 @@ FAQ:
 		
 - da fuq? You've got still no clue what's this all about?
 	- Either you are wrong here or you just need more information to learn about it...
-	More information (in German language!) at http://ian.lkv-nrw.de/index.php?id=308
-	Resources are quite rare, I just currently do not know any resource about this subject in English, I'm sorry.
-	Only if you want to spend some money to the ISO: http://www.techstreet.com/products/101643
-	Or the Book 'ISOagriNET für Entwickler und Entscheider' by Jürgen Goldmann.
+	- More information (in German language!) at http://ian.lkv-nrw.de/index.php?id=308
+	- Resources are quite rare, I just currently do not know any resource about this subject in English, I'm sorry.
+		- Except if you want to spend some money to the ISO: http://www.techstreet.com/products/101643
+	- Or the Book 'ISOagriNET für Entwickler und Entscheider' by Jürgen Goldmann.
 
 License: LGPL.
