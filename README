@@ -1,3 +1,7 @@
+Releases
+====
+Upcoming and past releases. Everything below 1.0 is unstable/beta/alpha...
+
 Upcoming release 0.2:
 - Full functionality on Request lines
 - Tests for Requests
@@ -7,7 +11,8 @@ Usable for Entity handling.
 - Register your handler
 - Do something with it.
 
----
+Description
+====
 
 To use this library you still need knowledge about the ADED contents 
 or at least about the entities which you want to communicate. 
@@ -44,6 +49,7 @@ S - Sync
 D - Delete
 
 FAQ:
+===
 - ADIS ?
 	ADIS = Agricultural Data Interchange Syntax
 - ADED ?
