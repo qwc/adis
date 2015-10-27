@@ -1,3 +1,7 @@
+# Development discontinued!
+
+Development of this project and the silbling project 'aded' has been discontinued, due to changed job conditions and out of focus of private interests.
+
 Releases
 ====
 Upcoming and past releases. Everything below 1.0 is unstable/beta/alpha...
@@ -7,17 +11,17 @@ Upcoming release 0.2:
 - Tests for Requests
 
 Release 0.1:
-Usable for Entity handling. 
+Usable for Entity handling.
 - Register your handler
 - Do something with it.
 
 Description
 ====
 
-To use this library you still need knowledge about the ADED contents 
-or at least about the entities which you want to communicate. 
-You still have to write converter classes from your data to a library 
-internal structure following the rules described for the entity in the ADED. 
+To use this library you still need knowledge about the ADED contents
+or at least about the entities which you want to communicate.
+You still have to write converter classes from your data to a library
+internal structure following the rules described for the entity in the ADED.
 
 Library purposes:
 - Read/Write ADIS formatted data files
@@ -51,10 +55,10 @@ Unsupported states:
 Internal description
 ----
 
-Lines are parsed using static and on-demand (value lines) regular expressions, 
+Lines are parsed using static and on-demand (value lines) regular expressions,
 with the hope for being fast even with big junks ADIS data.
 
-The ADIS syntax structure is built within classes with some abstraction. 
+The ADIS syntax structure is built within classes with some abstraction.
 ADIS structure and data are separated as far as possible and still linked too close.
 
 Requests with needed composing of lines and ADED (see aded project) are the main construction areas currently.  
@@ -68,7 +72,7 @@ FAQ:
 	- ADED = Agricultural Data Element Dictionary
 	- An ADED database from the LKV Nordrhein-Westfalen:
 		- https://webapp.lkv-nrw.de/AdedDataDictionary/
-		
+
 - da fuq? You've got still no clue what's this all about?
 	- Either you are wrong here or you just need more information to learn about it...
 	- More information (in German language!) at http://ian.lkv-nrw.de/index.php?id=308
